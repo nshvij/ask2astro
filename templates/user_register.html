@@ -1,0 +1,292 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/stel.css">
+    <title>Registation</title>
+    <style>
+        
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+  *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins',sans-serif;
+  }
+  body{
+      display: flex;
+      height: 200vh;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(123deg, #f4a036,#f37d35);
+  }
+  .container{
+      max-width: 700px;
+      width: 100%;
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 5px;
+  }
+  .container  .title{
+      font-size: 25px;
+      font-weight: 500; 
+      position: relative;
+  }
+  .container .title::before{
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 3px;
+      width: 30px;
+      background: linear-gradient(123deg, #f4a036,#f37d35);
+  }
+  .container form .user_details{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+  }
+  form .user_details .input_pox{
+      margin-bottom: 15px;
+      margin: 20px 0 12px 0;
+      width: calc(100% / 2 - 20px);
+  }
+  .user_details .input_pox .datails{
+      display: block;
+      font-weight: 500;
+      margin-bottom: 5px;
+  }
+  .user_details .input_pox input{
+      height: 45px;
+      width: 100%;
+      outline: none;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      padding-left: 15px;
+      font-size: 16px;
+      border-bottom-width: 2px;
+      transition: all 0.3s ease;
+  
+  }
+  .user_details .input_pox input:focus,
+  .user_details .input_pox input:valid{
+  border-color: #9b59b6;
+  }
+  form .gender_details .gender_title{
+      font-size: 20px;
+      font-weight: 500;
+  }
+  form .gender_details .category{
+      display: flex;
+      width: 80%;
+      margin: 14px 0;
+      justify-content: space-between;
+  }
+  .gender_details .category label{
+  display: flex;
+  }
+  .gender_details .category .dot{
+  height: 18px;
+  width: 18px;
+  background: #d9d9d9;
+  border-radius: 50%;
+  margin-right: 10px;
+  border: 5px solid transparent;
+  }
+  #dot-1:checked ~ .category label .one,
+  #dot-2:checked ~ .category label .two,
+  #dot-3:checked ~ .category label .three{
+  border-color: #d9d9d9;
+  background-color: #9b59b6;
+  }
+  form input[type="radio"]{
+      display: none;
+  }
+  form .button{
+      height: 45px;
+      margin: 45px 0;
+  }
+  form .button input{
+      height: 100%;
+      width: 100%;
+      outline: none;
+      color: #fff;
+      border: none;
+      font-size: 18px;
+      font-weight: 500;
+      border-radius: 5px;
+      letter-spacing: 1px;
+      background: linear-gradient(123deg, #f4a036,#f37d35);
+  
+  }
+  form .button input :hover{
+      background: linear-gradient(-123deg, #f4a036,#f37d35);
+  }
+  @media (max-width: 584px){
+      .container{
+          max-width: 100%;
+      }
+      form .user_details .input_pox{
+          margin-bottom: 15px;
+          width:100%;
+      }
+      form .gender_details .category{
+          width: 100%;
+      }
+      .container form .user_details{
+          max-height: 300px;
+          overflow: scroll;
+      }
+      .user_details::-webkit-scrollber{
+       width: 0;
+      }
+  }
+    </style>
+    
+    
+  
+  
+  
+</head>
+<body>
+    <div class="container">
+        <div class="title">Registation</div>
+           {% if messages %}
+            {% for ms in messages %}
+                <p {% if message.tags %} class="{{ message.tags }}"{% endif %} style="background-color: #FAF8F5;padding: 10px;font-size: 15px;color: rgb(48, 197, 48);border-radius: 10px;">{{ ms }}</p>
+                {% endfor %}</ul>
+            {% endif %}
+        <form  method="post" enctype="multipart/form-data" name="registrationForm" onsubmit="return validateForm()">
+            {%csrf_token%}
+            <div class="user_details">
+                <div class="input_pox">
+                    <span class="datails">First Name</span>
+                    <input type="text" name="fname" id="fname" placeholder="enter your first name" required>
+                </div>
+                <div class="input_pox">
+                    <span class="datails">Last Name</span>
+                    <input type="text" name="lname" id="lname" placeholder="enter your last name" required>
+                </div>
+                <div class="input_pox">
+                    <span class="datails">Username</span>
+                    <input type="text" name="usernm" id="usernm" placeholder="enter your Username" required>
+                </div>
+                <div class="input_pox">
+                    <span class="datails">Email</span>
+                    <input type="email" name="email" id="email" placeholder="enter your Email" required>
+                </div>
+                <div class="input_pox">
+                    <span class="datails">Password</span>
+                    <input type="password" name="password" id="password" placeholder="enter your Password" required>
+                </div>
+                <div class="input_pox">
+                <span class="datails">Country Code</span>
+                <select name="code" id="inputAddress" required>
+                    <option type"hidden">------------</option>
+                    {% for cd in code %}
+                    <option value="{{ cd.code }}">{{ cd.code }}</option>
+                    {% endfor %}                    
+                  </select>   
+                </div>
+                <div class="input_pox">
+                    <span class="datails">Phone Number</span>
+                    <input type="text" name="contact" id="contactNumber" placeholder="enter your Phone" required>
+                </div>
+                
+                
+                
+                <div class="input_pox">
+                    <span class="datails">Profile Pichure</span>
+                    <input type="file" placeholder="enter" name="profile" required>
+                </div>
+                
+                <div class="input_pox">
+                    <span class="datails">Language</span>
+                    <input type="text" name="language" placeholder="enter your Language" required>
+                </div>
+                <div class="input_pox">
+                    <span class="datails">Date of Birth</span>
+                    <input type="date" name="dob" placeholder="enter your last name" required>
+                </div>
+    
+                <div class="input_pox">
+                    <span class="datails">Marital Status</span>
+                    <select name="marital" placeholder="enter your Time of Birth" data-placeholder="Date">
+                        <option value="married">Married</option>  
+                        <option value="unmarried">Unmarried</option>   
+                        <option value="other">Other</option>                                   
+                    </select>
+                </div>
+                <div class="input_pox">
+                    <span class="datails">Time of Birth</span>
+                    <input type="time" name="timebirth" placeholder="enter your Time of Birth" required>
+                </div>
+                <div class="input_pox">
+                    <span class="datails">Place of Birth</span>
+                    <input type="text" name="place" placeholder="enter your Place of Birth" required>
+                </div>
+
+                <div class="input_pox">
+                    <span class="datails">Current Address</span>
+                    <input type="text" name="address" placeholder="enter your current address" required>
+                </div>
+
+                <div class="input_pox">
+                    <!--<seld>-->
+                </div>
+            </div>
+            <div class="gender_details">
+                <input type="radio" name="gender" value="male" id="dot-1">
+                <input type="radio" name="gender" value="female" id="dot-2">
+                <input type="radio" name="gender" value="other" id="dot-3">
+                <span class="gender_title"> Gender</span>
+                <div class="category">
+                    <label for="dot-1">
+                        <span class="dot one"></span>
+                        <span class="gender">Male</span>
+                    </label>
+                    <label for="dot-2">
+                        <span class="dot two"></span>
+                        <span class="gender">Female</span>
+                    </label>
+                    <label for="dot-3">
+                        <span class="dot three"></span>
+                        <span class="gender">Other</span>
+                    </label>
+                </div>
+            </div>
+
+            
+            <div class="button">
+                <input type="submit" value="Register">
+            </div>
+            
+            <div class="pass">
+                       <p> Click Here to <a href="/login/" class="as_link">Signin</a></p>
+                    </div>
+        </form>
+    </div>
+    
+    <script>
+    document.querySelector('form').addEventListener('submit', function(event) {
+    var contactNumberInput = document.getElementById('contactNumber');
+    var contactNumber = contactNumberInput.value;
+  
+    // Define the regular expression pattern for a valid contact number
+    var regex = /^[0-9]{10}$/;
+  
+    if (!regex.test(contactNumber)) {
+      // Display an error message
+      alert('Please enter a valid 10-digit contact number.');
+      // Prevent form submission
+      event.preventDefault();
+    }
+  });
+  
+  </script>
+    
+</body>
+</html>

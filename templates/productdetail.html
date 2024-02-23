@@ -1,0 +1,237 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+
+       <section class="as_breadcrum_wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h1>Product Detail</h1> 
+
+                        <ul class="breadcrumb"> 
+                            <li><a href="#">Home</a></li>
+                            <li>product detail</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="as_shopsingle_wrapper as_padderBottom80 as_padderTop80">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="as_shopsingle_slider">
+                            
+                            <div class="as_shopsingle_for">
+                                <div class="as_prod_img">
+                                    <img src="/media/{{ detailprod.prodpicture }}" alt="" class="img-responsive">
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        {% if messages == success %}
+                    {% for message in messages %}
+                        <p style="background-color: #FAF8F5;padding: 10px;font-size: 15px;color: rgb(48, 197, 48);border-radius: 10px;">{{ message }}</p>
+                        {% endfor %}
+                    
+                    {% else %}
+                    {% for message in messages %}
+                        <p style="background-color: #FAF8F5;padding: 10px;font-size: 15px;color: red;border-radius: 10px;">{{ message }}</p>
+                        {% endfor %}
+                    
+                    {% endif %}
+                        <div class="as_product_description">
+                            <h3 class="as_subheading as_margin0 as_padderBottom10">{{ detailprod.prodname }}</h3>
+                            <h4><del>₹ {{ detailprod.price }}</del></h4>
+                            <h2 class="as_price">₹ {{ cal }}  
+                                {% if detailprod.offers > '0' %}
+                                <span class="as_off as_btn">{{ detailprod.offers }}% Off</span>
+                                <!--<img src="{% static 'assets/images/svg/salelogo.png' %}" alt="">-->
+                                {% endif %}
+                                <!--{{ detailprod.offers }}% Off-->
+                                </h2> 
+                            
+                            <div class="product_rating as_padderBottom10">
+                               
+                                {% comment %} <span class="ref_number as_font14">Product Id: 212589</span>  {% endcomment %}
+                            </div>
+                            <p class="as_padderBottom10">
+                                {{ detailprod.discription }}
+                            </p>
+                            <form action="{% url 'addcart' id=detailprod.id %}" method="post">
+                                {% csrf_token %}
+                                
+                               
+                      <!--          <p class="qty">-->
+                    		<!--	<label for="qty">Quantity:</label>-->
+                    		<!--	<button class="qtyminus" aria-hidden="true" style="border-style:none">&minus;</button>-->
+                    		<!--	<input type="number"  id="qty" name="quantity" min="1" max="10" step="1" value="1"  style="border-style:none">-->
+                    		<!--	<button class="qtyplus" aria-hidden="true" style="border-style:none">&plus;</button>-->
+                    		<!--</p>-->
+                    		
+                    		    {% if prodquan > 0 %}
+                                <p class="qty">
+                                    <label for="qty">Quantity:</label>
+                                    <button class="qtyminus" aria-hidden="true" style="border-style:none">&minus;</button>
+                                    <input type="number"  id="qty" name="quan" min="1" max="{{ detailprod.quantity }}" step="1" value="1"  style="border-style:none">
+                                    <button class="qtyplus" aria-hidden="true"  style="border-style:none">&plus;</button>
+                                </p>
+                                <input type="submit" class="as_btn" value="Add To Cart"> 
+                                {% elif prodquan <= 0 %}
+                                    <del><span value="" class="as_btn" style="text-align:center">OUT OF STOCK</span></del>
+                                {% endif %}
+                                    
+                                    
+                                 
+                            </form>
+                            <br>
+                            <p>
+                                <a href="/products/"><button class="btn btn-danger">Back</button></a>
+                            </p>
+                            
+                            
+                            {% comment %} <div class="prod_detail">
+                                
+                                <!--<div class="prod_quantity as_padderBottom40">-->
+                                <!--    Quantity :-->
+                                <!--    <div class="quantity">-->
+                                <!--        <button type="button" class="qty_button minus"><img src="assets/images/svg/arrow_down.svg" alt=""></button>-->
+                                <!--        <input type="text" id="quantity_6041ce9eca5d6" class="input-text form-control qty text" step="1" min="1" max="100" name="quantity" value="1" title="Qty" inputmode="numeric">-->
+                                            
+                                <!--        <button type="button" class="qty_button plus"><img src="assets/images/svg/arrow_up.svg" alt=""></button>-->
+                                <!--        </div>-->
+                                <!--</div> -->
+                                
+                                {% if prodquan > 0 %}
+                                <p class="qty">
+                                    <label for="qty">Quantity:</label>
+                                    <button class="qtyminus" aria-hidden="true">&minus;</button>
+                                    <input type="number"  id="qty" name="quantity" min="1" max="{{ detailprod.quantity }}" step="1" value="1">
+                                    <button class="qtyplus" aria-hidden="true">&plus;</button>
+                                </p>
+                                <input type="submit" value="OK"> 
+                                {% elif prodquan <= 0 %}
+                                    <input value="OUT OF STOCK"> 
+                                {% endif %}
+                                
+                                
+                                {% comment %} <input type="text" name="user" value="{{ request.user.id}}">
+                                <input type="text" name="product" value="{{ detailprod.id}}"> {% endcomment %}
+                                
+                                
+                                {% comment %} <a href="{% url 'addcart' id=detailprod.id %}" class="as_btn"><button type="button" class="buy_btn as_btn" value="Buy Now"><span><img src="assets/images/svg/cart.svg" alt=""></span> add to card</button></a><br>
+
+                                
+                            </div>  {% endcomment %}
+                            
+                        </div>
+                    </div>
+                    
+                    {% comment %} <div class="col-lg-12 col-md-12">
+                        <div class="as_tab_wrapper as_padderTop80">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="Today" data-bs-toggle="tab" data-bs-target="#today" type="button" role="tab" aria-controls="today" aria-selected="true">Descriptions</button>
+                                  </li>
+                                  <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="Tabinfo" data-bs-toggle="tab" data-bs-target="#tabinfo" type="button" role="tab" aria-controls="tabinfo" aria-selected="false">Additional Information</button>
+                                  </li>
+                                  <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="Tomorrow" data-bs-toggle="tab" data-bs-target="#tomorrow" type="button" role="tab" aria-controls="tomorrow" aria-selected="false">Review</button>
+                                  </li>
+                            </ul>
+                              
+                            <div class="tab-content as_padderTop60" id="myTabContent">
+                                <div class="tab-pane fade show active" id="today" role="tabpanel" aria-labelledby="Today"> 
+                                   <p class="as_font14 as_padderBottom20">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose.</p>
+                                   <p class="as_font14 as_padderBottom20">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
+                                </div>
+                                <div id="adinfo tabinfo" class="tab-pane fade" role="tabpanel" aria-labelledby="Tabinfo">
+                                    <p class="as_font14 as_padderBottom20">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose.</p>
+                                   <p class="as_font14 as_padderBottom20">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
+                                </div>
+
+                                <div class="tab-pane fade" id="tomorrow" role="tabpanel" aria-labelledby="Tomorrow"> 
+                                   <h3 class="as_subheading as_orange as_margin0 as_padderBottom10">Review</h3>
+                                   <p class="as_font14 as_padderBottom20">There are no review yet</p>
+
+                                   <h3 class="as_subheading as_orange">Add A Review</h3>
+                                   <p class="as_font14 as_padderBottom20">Your email address will not be published.</p>
+
+                                   <form action="#">
+                                       <div class="form-group">
+                                           <textarea name="" id="" placeholder="Your Review" class="form-control"></textarea>
+                                       </div>
+
+                                       <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                                <div class="form-group">
+                                                    <input type="text" name="" class="form-control" placeholder="Your Name" class="form-control" id="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                                <div class="form-group">
+                                                    <input type="text" name="" class="form-control" placeholder="Your Email" class="form-control" id="">
+                                                </div>
+                                            </div>
+                                       </div>
+
+                                       <button class="as_btn">submit</button>
+                                   </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div> {% endcomment %}
+                </div>
+            </div>
+        </section>
+       
+        <script>
+            /*
+* @Adilade Input Quantity Increment
+* 
+* Free to use - No warranty
+*/
+
+var input = document.querySelector('#qty');
+var btnminus = document.querySelector('.qtyminus');
+var btnplus = document.querySelector('.qtyplus');
+
+if (input !== undefined && btnminus !== undefined && btnplus !== undefined && input !== null && btnminus !== null && btnplus !== null) {
+	
+	var min = Number(input.getAttribute('min'));
+	var max = Number(input.getAttribute('max'));
+	var step = Number(input.getAttribute('step'));
+
+	function qtyminus(e) {
+		var current = Number(input.value);
+		var newval = (current - step);
+		if(newval < min) {
+			newval = min;
+		} else if(newval > max) {
+			newval = max;
+		} 
+		input.value = Number(newval);
+		e.preventDefault();
+	}
+
+	function qtyplus(e) {
+		var current = Number(input.value);
+		var newval = (current + step);
+		if(newval > max) newval = max;
+		input.value = Number(newval);
+		e.preventDefault();
+	}
+		
+	btnminus.addEventListener('click', qtyminus);
+	btnplus.addEventListener('click', qtyplus);
+  
+} // End if test
+        </script>
+        
+      
+    {% endblock content %}

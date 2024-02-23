@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search a List</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    ul {
+      list-style: none;
+    }
+    li {
+      padding: 10px 0;
+      line-height: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+</body>
+<script>
+  var books = [
+    {
+      "title": "Cracking the coding interview",
+      "subtitle":"189 programming questions and solutions",
+      "author":"Gayle Laakmann McDowell",
+      "category":"Programming",
+      "publisher":"CareerCup, LLC"
+    },
+    {
+      "title": "No friend but the mountains",
+      "subtitle":"Writing from manu prison",
+      "author":"Behrouz Boochani",
+      "category":"Literature",
+      "publisher":"Pan Macmillan Australia"
+    },
+    {
+      "title": "Indian Harvest",
+      "subtitle":"Classic and contemporary vegetarian dishes",
+      "author":"Vikas Khanna",
+      "category":"Cuisine",
+      "publisher":"Bloomsbury USA"
+    },
+    // Check out the source code on github for a complete list
+  ]
+  
+  var render = function(data) {
+    var app = document.getElementById('app');
+    var booksHTMLString = '<ul>'+
+      data.map(function(book){
+        return '<li>'+
+                '<strong>Title: </strong>' + book.title + '<br/>' +
+                '<strong>Subtitle: </strong>' + book.subtitle + '<br/>' +
+                '<strong>Author: </strong>' + book.author + '<br/>' +
+                '<strong>Category: </strong>' + book.category + '<br/>' +
+                '<strong>Publisher: </strong>' + book.publisher + '<br/>' +
+              '</li>';
+      }).join('');
+      + '</ul>';
+
+    app.innerHTML = booksHTMLString;
+  }
+  render(books);
+</script>
+</html>

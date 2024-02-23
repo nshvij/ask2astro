@@ -1,0 +1,165 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+        
+       <section class="as_breadcrum_wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h1>Puja Slot</h1> 
+
+                        <ul class="breadcrumb"> 
+                            <li><a href="#">Home</a></li>
+                            <li>puja slot</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="as_shop_wrapper as_padderBottom90 as_padderTop80">
+            <div class="container">
+                <div class="row">
+
+                    
+                   
+                    <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
+                        <div class="as_shop_topbar">
+                            {% comment %} <span class="as_result_text">Showing 1–9 of 15 results</span> {% endcomment %}
+                            {% comment %} <div class="as_select_box">
+                                <select class="form-control" data-placeholder="Default Shorting">
+                                    <option value="male">By Name</option>
+                                    <option value="female">By Price</option>
+                                </select>
+                            </div>  {% endcomment %}
+                        </div>
+                        <div class="row">
+                            {% comment %} {% for prod in cartprod %}
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="as_product_box">
+                                    <div class="as_product_img">
+                                        <img src="/media/{{ prod.pooja.pojapicture }}" alt="" class="img-responsive">
+                                    </div> 
+                                    <div class="as_product_detail">
+                                        <h4 class="as_subheading">{{ prod.pooja.name }}</h4>
+                                        <span class="as_price">₹ {{ prod.pooja.offerprice }} <span class="as_orange"></span></span>
+                                        {% comment %} <a href="{% url 'proddetail' id=prod.product.id %}" class="as_btn">Checkout</a> {% endcomment %}
+                                    {% comment %}</div>
+                                </div>
+                            </div>
+                            {% endfor %} {% endcomment %}
+
+                            <table style="border-collapse: collapse;width: 130%;border-style:none">
+                                <tr >
+                                    <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Image</th>
+                                    <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Puja</th>
+                                    <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Booking Date</th>
+                                    <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Price</th>
+                                    <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Remove</th>
+                                </tr>
+                                {% for prod in cartprod %}
+                                <tr>
+                                    <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;"><img src="/media/{{ prod.pooja.pojapicture }}" alt="" width="200px" class="img-responsive"></td>
+                                    <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;"><a href="{% url 'viewpuja' id=prod.id %}">{{ prod.pooja.name }}</a></td>
+                                    <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">{{ prod.dateofpuja }}</td>
+                                    <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">₹ {{ prod.pooja.offerprice }}</td>
+                                    <!--<td><a href="{% url 'delpuja' id=prod.id %}"> <button class="btn btn-danger">X</button></td>-->
+                                    
+                                    <td>
+                                    <input type="checkbox" id="confirmation-checkbox">
+                                      <label for="confirmation-checkbox"><span class="btn btn-danger" style="border-radius:50%;" >X</span></label>
+                                      <div id="confirmation-message">
+                                        <p>Are you sure you want to Delete?</p>
+                                        <a  href="{% url 'delpuja' id=prod.id %}"><button class="btn btn-info">Yes</button></a>
+                                        <button id="cancel-button" class="btn btn-danger">No</button>
+                                      </div>
+                                      </td>
+                                </tr>
+                                {% endfor %}
+                             </table>
+                        </div>
+                        
+                        
+
+
+                    <div class="container"> 
+                    
+                    <div class="productcont">
+                            
+                            </div>
+                            <div class="cart-container">
+                            
+                            
+                            <table id="carttotals"  width="110%">
+                                <tr>
+                                <td style="color:#ffffff;"><strong>Slot Date & Time</strong></td>
+                                <td><strong>Total Amount</strong></td>
+                                </tr>
+                                <tr>
+                                <td style="color:#ffffff;"><span id="itemsquantity">{{slot1}} - {{slot}}</span></td>
+                                
+                                <td>₹<span id="total">{{totalamt1}}</span></td>
+                                </tr></table>
+
+                                <br></br>
+                            <div class="cart-buttons">  
+                                {% comment %} <button class="as_btn">Empty Cart</button> {% endcomment %}
+                                {% comment %} <button class="as_btn"><a href="/checkout/" class="as_btn">Checkout</a></button> {% endcomment %}
+                                {% comment %} {% url 'proddetail' id=prod.product.id %} {% endcomment %}
+                                <a href="/checkoutforpuja/"><button class="as_btn">Proceed to Pay</button></a>
+                            </div>
+                            </div>
+                    </div>
+                   
+                    </div>
+                </div>
+            </div>
+        </section>
+
+      
+<!--    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>-->
+
+<!--    <script>-->
+<!--        var options = {-->
+<!--            "key": "rzp_test_5zi3oIF0JLuyX2", // Enter the Key ID generated from the Dashboard-->
+<!--            "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise-->
+<!--            "currency": "INR",-->
+<!--            "name": "Ask2Astro",-->
+<!--            "description": "Purchase",-->
+<!--            "image": "https://example.com/your_logo",-->
+<!--            "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1-->
+<!--            "handler": function (response){-->
+<!--                alert(response.razorpay_payment_id);-->
+<!--                alert(response.razorpay_order_id);-->
+<!--                alert(response.razorpay_signature)-->
+<!--            },-->
+<!--           -->
+<!--            "theme": {-->
+<!--                "color": "#3399cc"-->
+<!--            }-->
+<!--        };-->
+<!--        var rzp1 = new Razorpay(options);-->
+<!--        rzp1.on('payment.failed', function (response){-->
+<!--                alert(response.error.code);-->
+<!--                alert(response.error.description);-->
+<!--                alert(response.error.source);-->
+<!--                alert(response.error.step);-->
+<!--                alert(response.error.reason);-->
+<!--                alert(response.error.metadata.order_id);-->
+<!--                alert(response.error.metadata.payment_id);-->
+<!--        });-->
+<!--        document.getElementById('rzp-button1').onclick = function(e){-->
+<!--            rzp1.open();-->
+<!--            e.preventDefault();-->
+<!--        }-->
+<!--        </script>-->
+        
+        <script>
+    var cancelButton = document.getElementById('cancel-button');
+    cancelButton.addEventListener('click', function() {
+  var confirmationCheckbox = document.getElementById('confirmation-checkbox');
+  confirmationCheckbox.checked = false;
+});
+</script>
+    {% endblock content %}

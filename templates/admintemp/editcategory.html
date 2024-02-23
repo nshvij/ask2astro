@@ -1,0 +1,70 @@
+{% extends 'admintemp/index.html' %}
+{% load static %}
+{% block content %}
+
+
+  <main id="main" class="main">
+   <div class="pagetitle">
+      <h1>Edit Product Category</h1>
+    
+    </div><!-- End Page Title -->
+   
+    <section class="section">
+      <div class="row">
+        
+
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <!--<h5 class="card-title"></h5>-->
+              {% if messages %}
+                <p class="messagelist" style="font-weight: bold;border-radius: 10px;background-color: #ffffff;font-size: 18px;color: rgb(63, 163, 50);">{% for message in messages %}{{ message }}{% endfor %}</p>
+                {% endif %}
+              <!-- Vertical Form -->
+              <form class="row g-3" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-12">
+                  <label for="inputNanme4" class="form-label">Category Name</label>
+                  <input type="text" class="form-control" id="inputNanme4" name="catname" value="{{ user.catprod }}">
+                </div>
+                
+                <div class="col-12">
+                  <label for="inputPassword4" class="form-label">Status</label>
+                  <select name="active_status" id="inputAddress" class="form-control" required>
+                      
+                     
+                    <option value="{{user.active_status}}">
+                        {% if user.active_status == True %}
+                        Active
+                        <option value="0">Inactive</option>
+                        {% elif user.active_status == False %}
+                        Inactive
+                        <option value="1">Active</option>
+                        {% endif %}
+                        </option>
+                        
+                    
+                    
+                    
+                                       
+                  </select>    
+                </div>
+                
+                
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary col-md-12">Update</button><br><br>
+                  <a href="/admin-panel/getcategory/" class="btn btn-primary col-md-12">Cancel</a>
+                </div>
+              </form><!-- Vertical Form -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  {% endblock content %}

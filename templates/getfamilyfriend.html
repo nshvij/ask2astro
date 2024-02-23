@@ -1,0 +1,88 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+        
+       <section class="as_breadcrum_wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h1>Friends/Family Profile</h1> 
+
+                        <ul class="breadcrumb"> 
+                            <li><a href="#">Home</a></li>
+                            <li>friends/family profile</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="as_shop_wrapper as_padderBottom90 as_padderTop80">
+            <div class="container">
+                {% if messages %}
+                {% for ms in messages %}
+                    <p {% if message.tags %} class="{{ message.tags }}"{% endif %} style="background-color: #FAF8F5;padding: 10px;font-size: 15px;color: rgb(48, 197, 48);border-radius: 10px;">{{ ms }}</p>
+                    {% endfor %}</ul>
+                {% endif %}
+                
+                <div class="row">
+                    
+                    <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
+                       
+                        <div class="row">
+                            {% for prod in getdata %}
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="as_product_box">
+                                    
+                                    <div class="as_product_detail">
+                                        <table width="200px">
+                                            <tr>
+                                                <td>Name</td>
+                                                <td >{{ prod.first_name }} {{ prod.lastname }}</td>
+                                                
+                                            </tr>
+                                           <tr>
+                                            <td>Relation</td>
+                                                <td >{{ prod.relationship.relation }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Gender</td>
+                                                    <td >{{ prod.gender }}</td>
+                                                </tr>
+                                                <tr>
+                                                <td>Date of Birth</td>
+                                                    <td >{{ prod.dateofbirth }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a class="btn btn-success" style="border-radius:50%;" href="{% url 'editfamilypro' id=prod.id %}"> <i class="fa fa-pencil" style="font-size: 14px;"> </i> </a>
+                                                        <a class="btn btn-danger" style="border-radius:50%;" href="{% url 'delfamilypro' id=prod.id %}"><i class="fa fa-trash-o" style="font-size: 14px;"></i></a>
+                                                    </td>
+                                                    </tr>
+                                        </table>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            
+                        </div>
+                        {% comment %} <div class="as_pagination as_padderTop50">
+                            <ul class="text-right">
+                                <li class="as_prev"><span>prev</span></li>
+                                <li class="as_active"><a href="javascript:;">1</a></li>
+                                <li><a href="javascript:;">2</a></li>
+                                <li><a href="javascript:;">3</a></li>
+                                <li class="as_next"><a href="javascript:;">next</a></li>
+                            </ul>
+                        </div> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+  
+
+    {% endblock content %}

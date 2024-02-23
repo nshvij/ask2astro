@@ -1,0 +1,69 @@
+{% extends 'admintemp/index.html' %}
+{% load static %}
+
+
+
+
+  {% block content %}
+  <main id="main" class="main">
+    
+    <div class="pagetitle">
+      <h1>Puja Cart List</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="">
+            <div class="card-body" >
+              {% comment %} <a href="/admin-panel/addproducts/"><button type="submit" class="btn btn-primary col-md-3">Add Product</button></a> {% endcomment %}
+              <!-- Default Table -->
+              <table class="table">
+                <thead>
+                  <tr  style="text-align:center;">
+                    <th scope="col">#</th>
+                    <th scope="col">Puja Name</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Slot Time</th>
+                    <th scope="col">Price</th>         
+                    <th scope="col">Booked By</th> 
+                  </tr>
+                </thead>
+
+                
+                <tbody>
+                  {% for ky in pujacarts %}
+                  <tr style="text-align:center;">
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td width="300px">
+                        
+                    {{ ky.pooja.name }}
+                    
+                    </td>  
+                    <td>{{ ky.dateofpuja }}</td>
+                    <td>{{ ky.pujaslot.slottime }}</td>
+                    <td>₹ {{ ky.pooja.price }}</td>
+                    <td>{{ ky.user.first_name }} {{ ky.user.last_name }}</td>
+                    <!--<td style="text-align: center;">-->
+                    <!--  <a class="btn btn-success" style="border-radius:50%;" href="{% url 'update_ord' id=ky.id %}"> <i class="fa fa-pencil" style="font-size: 14px;"> </i> </a>-->
+                    <!--  {% comment %} <a class="btn btn-danger" style="border-radius:50%;" href="{% url 'del_pati' id=ky.id %}"><i class="fa fa-trash-o" style="font-size: 14px;"></i></a> {% endcomment %}-->
+                    <!--</td> -->
+                    
+                      
+                    </tr>
+                  {% endfor %}
+                 
+                </tbody>
+              </table>
+              <!-- End Default Table Example -->
+            </div>
+          </div>
+
+          
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  {% endblock content %}
+  

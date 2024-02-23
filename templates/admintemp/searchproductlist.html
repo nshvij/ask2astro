@@ -1,0 +1,106 @@
+{% extends 'admintemp/index.html' %}
+{% load static %}
+
+
+
+
+  {% block content %}
+  <main id="main" class="main">
+<div class="pagetitle">
+      <h1>Search List Of Product</h1>
+      
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="">
+            <div class="" >
+              <a href="/admin-panel/addproducts/"><button type="submit" class="btn btn-primary col-md-3">Add Product</button></a>
+              <!-- Default Table -->
+              <table class="table">
+                <thead>
+                  <tr  style="text-align:center;">
+                    <th scope="col">#</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Product Image</th>
+                    <!--<th scope="col">Discription</th>-->
+                    <th scope="col">Price</th>           
+                    <th scope="col">Status</th>
+                    <!--<th scope="col">Category</th>-->
+                    <th scope="col">Offers</th>
+                    <th scope="col">Operation</th>
+                  </tr>
+                </thead>
+
+                
+                <tbody>
+                  {% for ky in data %}
+                  <tr style="text-align:center;">
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td><a href="{% url 'view_proddetail' id=ky.id %}">{{ ky.prodname }}</a></td>  
+                    {% comment %} <!--<a href="{% url 'view_patient' id=ky.id %}">--> {% endcomment %}
+                    <td width="200px"><img src="/media/{{ ky.prodpicture }}" alt="dewf" width="100px"></td>
+                    <!--<td width="400px" align="justify">{{ ky.discription }}</td>-->
+                    <td>₹ {{ ky.price }}</td>
+                    <td>
+                        {% if ky.active_status == True %}
+                        <span style="color:green;font-weight:bold;">Active</a>
+                        {% elif ky.active_status == False %}
+                        <span style="color:red;font-weight:bold;">Inactive</a>
+                        {% endif %}
+                        </td>
+                    <!--<td>{{ ky.category.catprod }}</td>-->
+                    <td>{{ ky.offers }}</td>
+                    <td style="text-align: center;">
+                      <a class="btn btn-success" style="border-radius:50%;" href="{% url 'update_pati' id=ky.id %}"> <i class="fa fa-pencil" style="font-size: 14px;"> </i> </a>
+                      <a class="btn btn-danger" style="border-radius:50%;" href="{% url 'del_pati' id=ky.id %}"><i class="fa fa-trash-o" style="font-size: 14px;"></i></a>
+                    </td>
+                    
+                      
+                    </tr>
+                  {% endfor %}
+                 
+                </tbody>
+              </table>
+              <!-- End Default Table Example -->
+            </div>
+            
+            
+          </div>
+                   <!--<hr>-->
+                   <!--     <nav aria-label="Page navigation example">-->
+                   <!--         <ul class="pagination">-->
+                   <!--             {% if all_lead.has_previous %}-->
+                   <!--           <li class="page-item">-->
+                   <!--             <a class="page-link" href="/admin-panel/getproducts/?page=1" tabindex="-1">First</a>-->
+                   <!--         </li>-->
+                   <!--           <li class="page-item">-->
+                   <!--             <a class="page-link" href="/admin-panel/getproducts/?page={{ all_lead.previous_page_number }}" tabindex="-1">Previous</a>-->
+                   <!--         </li>-->
+                   <!--         {% endif %}-->
+                             
+                   <!--         {% for n in totalPagelist %}-->
+                   <!--           <li class="page-item">-->
+                   <!--             <a class="page-link" href="/admin-panel/getproducts/?page={{n}}">{{n}}</a>-->
+                   <!--         </li>-->
+                   <!--         {% endfor %}-->
+                
+                   <!--         {% if all_lead.has_next %}-->
+                   <!--         <li class="page-item">-->
+                   <!--             <a class="page-link" href="/admin-panel/getproducts/?page={{ lastpage }}">Last</a>-->
+                   <!--         </li>-->
+                   <!--           <li class="page-item">-->
+                   <!--             <a class="page-link" href="/admin-panel/getproducts/?page={{ all_lead.next_page_number }}">Next</a>-->
+                   <!--         </li>-->
+                   <!--         {% endif %}-->
+                   <!--         </ul>-->
+                   <!--       </nav>-->
+          
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  {% endblock content %}
+  

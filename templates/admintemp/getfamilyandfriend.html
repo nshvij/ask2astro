@@ -1,0 +1,69 @@
+{% extends 'admintemp/index.html' %}
+{% load static %}
+
+
+
+
+  {% block content %}
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>FamilyFriend Profiles</h1>
+      
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="" style="padding:10px;">
+              {% comment %} <a href="/homepage/createkyc/"><button type="submit" class="btn btn-primary col-md-3">Add New KYC</button></a> {% endcomment %}
+              <!-- Default Table -->
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Fullname</th>
+                    {% comment %} <th scope="col">Last name</th> {% endcomment %}
+                    {% comment %} <th scope="col">Gender</th> {% endcomment %}
+                    <th scope="col">Relationship</th>    
+                    {% comment %} <th scope="col">Date of Birth</th>       
+                    <th scope="col">Time of Birth</th>    {% endcomment %}
+                    <th scope="col">Place Of Birth</th>   
+                    <th scope="col">Ask By</th>       
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for ky in getdata %}
+                  <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td><a href="{% url 'famfri_view' id=ky.id %}">{{ ky.first_name }} {{ ky.last_name }}</a></td>
+                    {% comment %} <td>{{ ky.last_name }}</td> {% endcomment %}
+                    {% comment %} <td>{{ ky.gender }}</td> {% endcomment %}
+                    <td>{{ ky.relationship.relation }}</td>
+                    {% comment %} <td>{{ ky.dateofbirth }}</td> {% endcomment %}
+                    {% comment %} <td>{{ ky.timeofbirth }}</td> {% endcomment %}
+                    <td>{{ ky.placeofbirth }}</td>
+                    <td><a href="{% url 'prof_view' id=ky.id %}">{{ ky.ask_by.first_name }} {{ ky.ask_by.last_name }}</a></td>
+                    {% comment %} <td style="text-align: center;"><a class="btn btn-success" style="border-radius:50%;" href="{% url 'update_user' id=ky.id %}"> <i class="fa fa-pencil" style="font-size: 14px;"> </i> </a>
+                      <a class="btn btn-danger" style="border-radius:50%;" href="{% url 'del_user' id=ky.id %}"><i class="fa fa-trash-o" style="font-size: 14px;"></i></a>
+                     
+                    </td> {% endcomment %}
+                      
+                    </tr>
+                  {% endfor %}
+                 
+                </tbody>
+              </table>
+              <!-- End Default Table Example -->
+            </div>
+          </div>
+
+          
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  {% endblock content %}
+  

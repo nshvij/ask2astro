@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+
+       <section class="as_breadcrum_wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h1>Pay with Wallet</h1> 
+
+                        <ul class="breadcrumb"> 
+                            <li><a href="#">Home</a></li>
+                            <li>Pay with Wallet</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+       
+       <section class="as_contact_wrapper as_padderBottom40 as_padderTop50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h1 class="as_heading as_heading_center">
+                            Successfully Paid with Wallet of ₹{{totalamt}}..!
+                        </h1>
+                        <a href="/"><button class="as_btn">
+                            Go Back To Home
+                        </button></a>
+                       </div>
+
+                </div>
+            </div>
+       </section> 
+       
+    {% endblock content %}
