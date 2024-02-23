@@ -1,0 +1,680 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block content %}
+
+
+
+
+
+       <section class="as_breadcrum_wrapper">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="col-lg-12 text-center">
+
+                        <h1>Puja Detail</h1> 
+
+
+
+                        <ul class="breadcrumb"> 
+
+                            <li><a href="#">Home</a></li>
+
+                            <li>puja detail</li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+
+
+        <section class="as_blog_wrapper as_padderBottom40 as_padderTop80">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                            <div class="as_comment_form as_padderBottom20">
+                                <h1 class="as_heading as_font_size_24">Select Your Booking</h1>
+                            </div>
+                            <div class="as_booking_section as_padderBottom20">
+
+
+
+                                <div class="row as_appointment_form">
+
+                                    
+
+                                    {% for message in messages %}
+
+                                    <p style="background-color: #FAF8F5;padding: 10px;font-size: 15px;color: rgb(48, 197, 48);border-radius: 10px;">{{ message }}</p>
+
+                                    {% endfor %}
+
+                                    
+
+                                    <form action="{% url 'pujaslot' id=detailpoja.id %}" method="post" enctype='multipart/form-data'>
+
+                                        {% csrf_token %}
+
+                                        <div class="col-lg-12 col-md-12 col-sm-12 pl-0">
+
+                                            <div class="form-group">
+
+                                                <input type="date" placeholder="Booking Of Date" name="date" id="datepicker" class="form-control " required>
+
+                                                <!--<span><img src="{% static 'assets/images/svg/calendar.svg' %}" alt=""></span>-->
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-12 col-md-12 col-sm-12 pl-0">
+
+                                            <div class="form-group">
+
+                                                <div class="as_select_box">
+
+                                                    <select class="form-control" name="pujaslt" required>
+
+                                                        <option type="hidden">---------</option>
+
+                                                        {% for slt in slot%}
+
+                                                        <option value="{{ slt.id}}">{{ slt.slottime }}</option>  
+
+                                                        {% endfor %} 
+
+                                                    </select>
+
+                                                </div> 
+
+                                            </div>
+
+                                        </div>
+
+                                        <input type="submit" class="as_btn" value="Book Now">
+
+
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                                <h3 class="as_bookingheading">
+                                    <!-- <img src="assets/images/svg/info.svg" alt="">  -->
+                                    Booking Information
+                                </h3>
+
+
+
+                                    <div class="row">
+
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+
+                                            <ul class="as_total_amount list-unstyled">
+
+                                                <li  class="as_padderBottom20 as_marginBottom20 border-bottom">
+
+                                                    <h5 class="font-weight-bold">Puja Price</h5>
+                                                    <span class="small d-block lh-normal">M.R.P:
+                                                        <del>₹ {{ detailpoja.price }}</del>
+                                                    </span>
+                                                    <span class="as_price_new"><sup>₹</sup> {{ cal }}</span>
+
+                                                </li>
+
+                                                <li class="as_padderTop20">
+ 
+                                                    <h5 class="font-weight-bold">Offer</h5>
+                                                    <span>
+
+                                                        {% if detailpoja.offers > '0' %}
+
+                                                        <span class="as_off as_btn">{{ detailpoja.offers }}% Off</span>
+
+                                                        <!--<img src="{% static 'assets/images/svg/salelogo.png' %}" alt="">-->
+
+                                                        {% endif %}
+
+                                                        <!--{{ detailpoja.offers }}% Off-->
+
+                                                        </span>
+
+                                                </li>
+
+                                                {% comment %} 
+                                                <li>
+
+                                                    <span>Tax paid</span>
+
+                                                    <span>50</span>
+
+                                                </li>
+
+                                                <li>
+
+                                                    <span>Total Amount</span>
+
+                                                    <span>500</span>
+
+                                                </li> 
+                                                {% endcomment %}
+
+                                            </ul>
+
+                                        </div>
+
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+
+                                            <ul>
+
+                                                {% comment %} 
+                                                <li>
+
+                                                    <span>Expert</span>
+
+                                                    <span>John Morker</span>
+
+                                                </li>
+
+                                                <li>
+
+                                                    <span>Date</span>
+
+                                                    <span>14-01-2022</span>
+
+                                                </li>
+
+                                                <li>
+
+                                                    <span>Time</span>
+
+                                                    <span>09.00 AM</span>
+
+                                                </li>
+
+                                                <li>
+
+                                                    <span>Service</span>
+
+                                                    <span>Kundli Dosha</span>
+
+                                                </li> 
+                                                {% endcomment %}
+
+                                            </ul>
+
+                                        </div>
+
+                                    </div> 
+                    </div>
+
+                    <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
+
+                        <div class="as_service_single">
+
+                            <div class="as_service_img rounded overflow-hidden mb-4">
+
+                                <img src="/media/{{ detailpoja.pojapicture }}"  width="100%" alt="" class="img-responsive">
+
+                            </div>
+
+
+
+                            <div class="as_bookingform">
+
+                                
+
+
+                                <div class="as_booking_section as_padderBottom30">
+
+                                    
+
+                                    <h3>{{ detailpoja.name }}</h3>
+
+                                    <p class="as_margin0 as_padderBottom20">{{ detailpoja.discription }}</p>
+
+                                    
+
+                                    <p class="as_padderBottom10">
+
+                                        <h2>Why you need this Puja</h2>
+
+                                        {{ detailpoja.needofpuja }}
+
+                                    </p>
+
+
+
+                                    <p class="as_padderBottom10">
+
+                                        <h2>Advantages of Puja</h2>
+
+                                        {{ detailpoja.advantages }}
+
+                                    </p>
+
+
+
+                                    <p class="as_padderBottom10">
+
+                                        <h2>Need of Puja</h2>
+
+                                        {{ detailpoja.needofpuja }}
+
+                                    </p>
+
+
+
+
+
+                                    <p class="as_padderBottom10">
+
+                                        <h2>Puja Samagri</h2>
+
+                                        {{ detailpoja.pujasamagri }}
+
+                                    </p>
+
+                            
+
+                                </div>
+
+
+                                {% comment %} 
+                                <div class="as_booking_section as_payment">
+
+                                    
+                                    <h3 class="as_bookingheading"><img src="assets/images/svg/credit_card.svg" alt=""> Select payment Method</h3> {% endcomment %}
+
+
+
+                                    {% comment %} 
+                                    <ul class="as_payment_list">
+
+                                        <li>
+
+                                            <span><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="13px" height="13px"> <path fill-rule="evenodd" d="M12.892,5.722 C12.650,6.796 12.073,7.706 11.224,8.354 C10.375,9.001 9.311,9.343 8.147,9.343 L5.739,9.343 L5.018,12.537 C4.957,12.807 4.705,13.000 4.413,13.000 L2.311,13.000 C2.124,13.000 1.947,12.920 1.830,12.782 C1.712,12.644 1.667,12.464 1.707,12.291 L1.862,11.620 L2.721,11.620 C3.301,11.620 3.810,11.231 3.931,10.695 L4.548,7.963 L6.455,7.963 C7.763,7.963 8.961,7.576 9.921,6.844 C10.882,6.111 11.533,5.086 11.806,3.879 C11.906,3.438 11.944,3.021 11.922,2.629 C12.089,2.753 12.240,2.891 12.369,3.042 C12.962,3.734 13.138,4.636 12.892,5.722 ZM9.532,6.389 C8.684,7.036 7.620,7.378 6.455,7.378 L4.048,7.378 L3.326,10.573 C3.265,10.843 3.013,11.035 2.721,11.035 L0.620,11.035 C0.432,11.035 0.255,10.955 0.138,10.817 C0.020,10.680 -0.025,10.499 0.015,10.326 L2.290,0.460 C2.352,0.192 2.604,0.000 2.895,0.000 L8.140,0.000 C9.136,0.000 10.109,0.413 10.678,1.078 C11.271,1.770 11.446,2.671 11.201,3.757 C10.958,4.831 10.381,5.741 9.532,6.389 ZM7.855,2.669 C7.638,2.401 7.290,2.247 6.902,2.247 L5.252,2.247 L4.530,5.266 L6.111,5.266 C6.965,5.266 7.828,4.593 8.035,3.765 C8.037,3.760 8.038,3.755 8.040,3.749 C8.153,3.348 8.085,2.954 7.855,2.669 Z"/> </svg></span>
+
+
+
+                                            razorpay
+
+                                        </li>
+
+                                       
+
+                                    </ul> 
+                                    
+
+                                </div>
+                                {% endcomment %}
+
+                                
+
+                                {% comment %} <a href="javascript:;" class="as_btn">Book Now</a> {% endcomment %}
+
+                            </div>
+
+    
+
+                            
+
+    
+
+                            
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+
+
+
+
+        {% comment %} 
+        <section class="as_shopsingle_wrapper as_padderBottom80 as_padderTop80">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+
+                        <div class="as_shopsingle_slider">
+
+                            
+
+                            <div class="as_shopsingle_for">
+
+                                <div class="as_prod_img">
+
+                                    <img src="/media/{{ detailpoja.pojapicture }}" alt="" class="img-responsive">
+
+                                </div>
+
+                                
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+
+                        {% if messages %}
+
+                    {% for message in messages %}
+
+                        <p style="background-color: #FAF8F5;padding: 10px;font-size: 15px;color: rgb(48, 197, 48);border-radius: 10px;">{{ message }}</p>
+
+                        {% endfor %}</ul>
+
+                    {% endif %}
+
+                    
+
+                        <div class="as_product_description">
+
+                            <h3 class="as_subheading as_margin0 as_padderBottom10">{{ detailpoja.name }}</h3>
+
+                            <h2 class="as_price">₹ {{ detailpoja.price }}  <span class="as_off as_btn">{{ detailpoja.offers }}% Off</span></h2> 
+
+                            <div class="product_rating as_padderBottom10">
+
+                               
+
+                                {% comment %} <span class="ref_number as_font14">Product Id: 212589</span>  {% endcomment %}
+
+                            {% comment %} </div>
+
+                            <p class="as_padderBottom10">
+
+                                <h2>About Puja</h2>
+
+                                {{ detailpoja.discription }}
+
+                            </p> {% endcomment %}
+
+                            {% comment %} <p class="as_padderBottom10">
+
+                                <h2>Why you need this Puja</h2>
+
+                                {{ detailpoja.needofpuja }}
+
+                            </p> {% endcomment %}
+
+                            {% comment %} <p class="as_padderBottom10">
+
+                                <h2>Advantages of Puja</h2>
+
+                                {{ detailpoja.advantages }}
+
+                            </p> {% endcomment %}
+
+                            {% comment %} <p class="as_padderBottom10">
+
+                                <h2>Puja Samagri</h2>
+
+                                {{ detailpoja.pujasamagri }}
+
+                            </p> {% endcomment %}
+
+                           
+
+                            {% comment %} <form action = "{% url 'pujaslot' id=detailpoja.id %}" method="post" >
+
+                                    {% csrf_token %}
+
+                                <p>
+
+                                    <select class="form-control" name="pujaslot" data-placeholder="Date">
+
+                                        {% for slt in slot%}
+
+                                        <option value="{{ slt.id}}">{{ slt.slottime }}</option>  
+
+                                        {% endfor %}                                                      
+
+                                    </select>
+
+                                </p>
+
+
+
+                                <p>
+
+                                    <input class="form-control" type="date" name="date" >
+
+                                </p>
+
+
+
+                                <div class="prod_detail">
+
+                                
+
+                                    <a href="" class="as_btn"><button type="button" class="buy_btn as_btn" value="Buy Now"><span><img src="assets/images/svg/cart.svg" alt=""></span> Booking Slot</button></a>
+
+
+
+                                </div>
+
+                            </form> {% endcomment %}
+
+                            {% comment %} <form action="{% url 'pujaslot' id=detailpoja.id %}" method="post" enctype='multipart/form-data'>
+
+                                {% csrf_token %}
+
+
+
+                                <div>
+
+                                    <input class="form-control" type="date" name="date" ><span><img src="assets/images/svg/cart.svg" alt=""></span>
+
+                                </div>
+
+                                <div>
+
+                                    <select class="form-control" name="pujaslt" data-placeholder="Date">
+
+                                        {% for slt in slot%}
+
+                                        <option value="{{ slt.id}}">{{ slt.slottime }}</option>  
+
+                                        {% endfor %}                                                      
+
+                                    </select>
+
+                                </div>
+
+
+
+                                
+
+
+
+                                <div class="prod_detail">
+
+                                
+
+                                    <input type="submit" value="OK">
+
+
+
+                                </div>
+
+                            </form>
+
+                            
+
+                        </div>
+
+                    </div>
+
+                    
+
+
+
+                    <div class="col-lg-12 col-md-12">
+
+                        <div class="as_tab_wrapper as_padderTop80">
+
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                                <li class="nav-item" role="presentation">
+
+                                    <button class="nav-link active" id="Today" data-bs-toggle="tab" data-bs-target="#today" type="button" role="tab" aria-controls="today" aria-selected="true">Why you need this Puja</button>
+
+                                  </li> {% endcomment %}
+
+                                  {% comment %} <li class="nav-item" role="presentation">
+
+                                    <button class="nav-link" id="Tabinfo" data-bs-toggle="tab" data-bs-target="#tabinfo" type="button" role="tab" aria-controls="tabinfo" aria-selected="false">Advantages of Puja</button>
+
+                                  </li> {% endcomment %}
+
+                                  {% comment %} <li class="nav-item" role="presentation">
+
+                                    <button class="nav-link" id="Tomorrow" data-bs-toggle="tab" data-bs-target="#tomorrow" type="button" role="tab" aria-controls="tomorrow" aria-selected="false">Puja Samagri</button>
+
+                                  </li>
+
+                            </ul>
+
+                              
+
+                            <div class="tab-content as_padderTop60" id="myTabContent">
+
+                                <div class="tab-pane fade show active" id="today" role="tabpanel" aria-labelledby="Today"> 
+
+                                   <p class="as_font14 as_padderBottom20">{{ detailpoja.needofpuja }}</p>
+
+                                   <p class="as_font14 as_padderBottom20"></p>
+
+                                </div>
+
+                                <div id="adinfo tabinfo" class="tab-pane fade" role="tabpanel" aria-labelledby="Tabinfo">
+
+                                    <p class="as_font14 as_padderBottom20"></p>
+
+                                   <p class="as_font14 as_padderBottom20"></p>
+
+                                </div>
+
+
+
+                                <div class="tab-pane fade" id="tomorrow" role="tabpanel" aria-labelledby="Tomorrow"> 
+
+                                   <h3 class="as_subheading as_orange as_margin0 as_padderBottom10"></h3>
+
+                                   <p class="as_font14 as_padderBottom20">{{ detailpoja.advantages }}</p>
+
+
+
+                                   <h3 class="as_subheading as_orange"></h3>
+
+                                   <p class="as_font14 as_padderBottom20"></p> {% endcomment %}
+
+
+
+                                   {% comment %} <form action="#">
+
+                                       <div class="form-group">
+
+                                           <textarea name="" id="" placeholder="Your Review" class="form-control"></textarea>
+
+                                       </div>
+
+
+
+                                       <div class="row">
+
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
+
+                                                <div class="form-group">
+
+                                                    <input type="text" name="" class="form-control" placeholder="Your Name" class="form-control" id="">
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
+
+                                                <div class="form-group">
+
+                                                    <input type="text" name="" class="form-control" placeholder="Your Email" class="form-control" id="">
+
+                                                </div>
+
+                                            </div>
+
+                                       </div>
+
+
+
+                                       <button class="as_btn">submit</button>
+
+                                   </form> {% endcomment %}
+
+                                {% comment %} </div>
+
+                            </div>
+
+                        </div>
+
+                    </div> 
+
+                 
+
+                </div>
+
+            </div>
+
+        </section> 
+        {% endcomment %}
+
+       
+
+       <script>
+
+  const today = new Date().toISOString().split('T')[0];
+
+document.getElementById("datepicker").setAttribute("min", today);
+
+
+
+</script>
+
+        
+
+       
+
+    {% endblock content %}
+

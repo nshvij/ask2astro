@@ -1,0 +1,70 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+<section class="as_breadcrum_wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h1>Shipping & Delivery Policy</h1> 
+
+                        <ul class="breadcrumb"> 
+                            <li><a href="#">Home</a></li>
+                            <li>Shipping & Delivery Policy </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="as_blog_wrapper as_padderBottom90 as_padderTop80">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                        <p></p>
+                    </div>
+                    <div class="col-lg-12 col-md-8 col-sm-12 col-xs-12">
+                        
+                        <div class="as_blog_box">
+                            <div class="as_blog_img">
+                                <a href="blog_detail.html"></a>
+                                <span class="as_btn"></span>
+                            </div>
+                            <div class="as_blog_detail">
+                                
+                                <h4 class="as_subheading"> </h4> 
+                                <p class="as_font14 as_margin0 as_padderBottom10">
+								
+								Last updated on Jun 28th 2023
+</p><p>
+You may contact us using the information below:
+<ol>
+                                <li class="as_info_box">
+                                    <p><b>Ask2Astro</b><br>B 167 Abhilasha Colony, Dewas Road<br> Ujjain MP 456010</p>
+                                </li>
+                                <li class="as_info_box">
+                                    <p>+91 72010 92290</p>
+                                </li>
+                                <li class="as_info_box">
+                                    <p><a href="javascript:;">support@ask2astro.com</a></p>
+                                </li>
+                            </ol>
+</p> 
+                         
+
+                               
+
+                                
+                            </div>
+
+                         
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+  
+
+    {% endblock content %}

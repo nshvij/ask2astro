@@ -1,0 +1,105 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+
+       <section class="as_breadcrum_wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h1>Product Detail</h1> 
+
+                        <ul class="breadcrumb"> 
+                            <li><a href="#">Home</a></li>
+                            <li>product detail</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="as_shopsingle_wrapper as_padderBottom80 as_padderTop80">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="as_shopsingle_slider">
+                            
+                            <div class="as_shopsingle_for">
+                                <div class="as_prod_img">
+                                    <img src="/media/{{ detailprod.product.prodpicture }}" alt="" class="img-responsive">
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        {% comment %} {% if messages %}
+                    {% for message in messages %}
+                        <p style="background-color: #FAF8F5;padding: 10px;font-size: 15px;color: rgb(48, 197, 48);border-radius: 10px;">{{ message }}</p>
+                        {% endfor %}</ul>
+                    {% endif %} {% endcomment %}
+                        <div class="as_product_description">
+                            <h3 class="as_subheading as_margin0 as_padderBottom10">{{ detailprod.product.prodname }}</h3>
+                            <h2 class="as_price">₹ {{ cal }}  <span class="as_off as_btn">{{ detailprod.product.offers }}% Off</span></h2> 
+                            <div class="product_rating as_padderBottom10">
+                               
+                                {% comment %} <span class="ref_number as_font14">Product Id: 212589</span>  {% endcomment %}
+                            </div>
+                            <p class="as_padderBottom10">
+                                {{ detailprod.product.discription }}
+                            </p>
+                            <form action="{% url 'viewprod' id=detailprod.id %}" method="post">
+                                {% csrf_token %}
+                                {% comment %} <label for="your_name">Your name: </label>
+                                <input id="your_name" type="text" name="your_name" value="{{ current_name }}">
+                                <input type="submit" value="OK"> {% endcomment %}
+                                {% comment %} <div class="prod_detail">
+                                
+                                    <div class="prod_quantity as_padderBottom40">
+                                        Quantity :
+                                        <div class="quantity">
+                                            <button type="button" class="qty_button minus"><img src="assets/images/svg/arrow_down.svg" alt=""></button>
+                                            <input type="text" id="quantity_6041ce9eca5d6" class="input-text form-control qty text" step="1" min="1" max="100" name="quantity" value="1" title="Qty" inputmode="numeric">
+                                            
+                                            <button type="button" class="qty_button plus"><img src="assets/images/svg/arrow_up.svg" alt=""></button>
+                                            </div>
+                                    </div> 
+                                    {% comment %} <input type="text" name="user" value="{{ request.user.id}}">
+                                    <input type="text" name="product" value="{{ detailprod.id}}"> {% endcomment %}
+                                    
+                                    
+                                    {% comment %} <a href="" class="as_btn"><button type="button" class="buy_btn as_btn" value="Buy Now"><span><img src="assets/images/svg/cart.svg" alt=""></span> add to card</button></a><br> {% endcomment %}
+    
+                                    
+                                {% comment %} </div> {% endcomment %} 
+                                
+                                
+
+                                {% if prodquan > 0 %}
+                                <p class="qty">
+                                    <label for="qty">Quantity:</label>
+                                    <!--<button class="qtyminus" aria-hidden="true" style="border-style:none">&minus;</button>-->
+                                    <input type="number"  id="qty" name="quan" min="1" max="{{ detailprod.product.quantity }}" step="1" value="{{ detailprod.quantity }}">
+                                    <!--<button class="qtyplus" aria-hidden="true"  style="border-style:none">&plus;</button>-->
+                                </p>
+                                <input type="submit" class="as_btn" value="Add To Cart"> 
+                                {% elif prodquan <= 0 %}
+                                    <del><button value="" class="as_btn" style="text-align:center">OUT OF STOCK</button></del>
+                                {% endif %}
+                            </form>
+
+                            
+                            
+                            
+                        </div>
+                    </div>
+                    
+                  
+                </div>
+            </div>
+        </section>
+       
+        
+        
+      
+    {% endblock content %}

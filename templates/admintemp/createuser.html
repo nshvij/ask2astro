@@ -1,0 +1,88 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+  <main id="main" class="main">
+
+   
+    <section class="section">
+      <div class="row">
+        
+
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Create User Account</h5>
+              {% if messages %}
+                <p class="messagelist" style="font-weight: bold;border-radius: 10px;background-color: #ffffff;font-size: 18px;color: rgb(63, 163, 50);">{% for message in messages %}{{ message }}{% endfor %}</p>
+                {% endif %}
+              <!-- Vertical Form -->
+              <form class="row g-3" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-12">
+                  <label for="inputNanme4" class="form-label">Full Name</label>
+                  <input type="text" class="form-control" id="inputNanme4" name="full_name">
+                </div>
+                <div class="col-12">
+                  <label for="inputEmail4" class="form-label">Mobile No</label>
+                  <input type="number" class="form-control" id="inputEmail4" name="mobileno">
+                </div>
+                <div class="col-12">
+                  <label for="inputPassword4" class="form-label">City</label>
+                  <input type="text" class="form-control" id="inputPassword4" name="city">
+                </div>
+                <div class="col-12">
+                  <label for="inputAddress" class="form-label">Gender</label>
+                  {% comment %} <input type="text" class="form-control" name="gender" id="inputAddress" placeholder="1234 Main St"> {% endcomment %}
+                  <select name="gender" id="inputAddress" class="form-control">
+                    {% comment %} <option value="{{ user.gender }}">{{ user.gender }}</option> {% endcomment %}
+                    <option value="male">Male</option>
+                    <option value="female">female</option>
+                    {% comment %} <option value="female">Other</option> {% endcomment %}
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label for="inputPassword4" class="form-label">Occupation</label>
+                  <input type="text" class="form-control" name="occupation" id="inputPassword4"
+                </div>
+                <div class="col-12">
+                  <label for="inputPassword4" class="form-label">Motive</label>
+                  <input type="text" class="form-control" name="motive" id="inputPassword4">
+                </div>
+                <div class="col-12">
+                  <label for="inputPassword4" class="form-label">Income</label>
+                  <input type="text" class="form-control" name="income" id="inputPassword4">
+                </div>
+                <div class="col-12">
+                  <label for="inputPassword4" class="form-label">Monthly Contribution</label>
+                  <input type="text" class="form-control" name="monthlycontribution" id="inputPassword4">
+                </div>
+                <div class="col-12">
+                  <label for="inputPassword4" class="form-label">Email</label>
+                  <input type="email" class="form-control" name="email" id="inputPassword4">
+                </div>
+                <div class="col-12">
+                  <label for="inputPassword4" class="form-label">Alternate No</label>
+                  <input type="text" class="form-control" name="alternateno" id="inputPassword4">
+                </div>
+                <div class="col-12">
+                  <label for="inputPassword4" class="form-label">Profile picture</label>
+                  <input class="form-control" type="file" name="profileimg" id="fileToUpload" required>
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary col-md-12">Create Profile</button>
+                  {% comment %} <button type="reset" class="btn btn-secondary">Reset</button> {% endcomment %}
+                </div>
+              </form><!-- Vertical Form -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  {% endblock content %}

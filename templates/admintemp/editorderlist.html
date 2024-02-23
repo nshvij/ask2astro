@@ -1,0 +1,93 @@
+{% extends 'admintemp/index.html' %}
+{% load static %}
+{% block content %}
+
+
+  <main id="main" class="main">
+   <div class="pagetitle">
+      <h1>Edit Order Detail</h1>
+    
+    </div>
+   
+    <section class="section">
+      <div class="row">
+        
+
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <!--<h5 class="card-title">Edit Order Detail</h5>-->
+              {% if messages %}
+                <p class="messagelist" style="font-weight: bold;border-radius: 10px;background-color: #ffffff;font-size: 18px;color: rgb(63, 163, 50);">{% for message in messages %}{{ message }}{% endfor %}</p>
+                {% endif %}
+              <!-- Vertical Form -->
+              <form class="row g-3" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-12">
+                  <label for="inputNanme4" class="form-label">Product Name</label>
+                  <input type="text" class="form-control" id="inputNanme4" name="prodname" value="{{ order.productid }}">
+                </div>
+
+                <div class="col-12">
+                  <label for="inputEmail4" class="form-label">Order By</label>
+                  <input type="text" class="form-control" id="inputEmail4" name="discription" value="{{ order.userid.username }}">
+                </div>
+
+                <div class="col-12">
+                  <label for="inputEmail4" class="form-label">Order date</label>
+                  <input type="text" class="form-control" id="inputEmail4" name="discription" value="{{ order.orderdate }}">
+                </div>
+                
+                
+                <div class="col-12">
+                  <label for="inputPassword4" class="form-label">Status</label>
+                  <select name="status" id="inputAddress" class="form-control">
+                    <option value="{{order.order_status}}">
+                    {% if order.order_status == True %}
+                        Complete
+                        <option value="False">Pending</option>
+                        {% elif order.order_status == False %}
+                        Pending
+                        <option value="True">Complete</option>
+                        {% endif %}
+                    </option>
+                    
+                    
+                    
+                                       
+                  </select>    
+                </div>
+
+                <div class="col-12">
+                  <label for="inputPassword4" class="form-label">Quantity</label>
+                  <input type="text" class="form-control" name="quantity" id="dignosis2" value="{{ order.quantity }}">
+                </div> 
+
+
+
+                <div class="col-12">
+                  <label for="inputPassword4" class="form-label">Price</label>
+                  <input type="text" class="form-control" name="offers" id="discharged" value="{{ order.order_price }}">
+                </div>
+
+                
+
+                
+                
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary col-md-12">Update</button><br><br>
+                  <a href="/admin-panel/getproductorder/" class="btn btn-primary col-md-12">Cancel</a>
+                </div>
+              </form><!-- Vertical Form -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  {% endblock content %}

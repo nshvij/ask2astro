@@ -1,0 +1,82 @@
+{% extends 'admintemp/index.html' %}
+{% load static %}
+
+
+
+
+  {% block content %}
+  <main id="main" class="main">
+    
+    <div class="pagetitle">
+      <h1>Product Order List</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="">
+            <div class="card-body" >
+              {% comment %} <a href="/admin-panel/addproducts/"><button type="submit" class="btn btn-primary col-md-3">Add Product</button></a> {% endcomment %}
+              <!-- Default Table -->
+              <table class="table">
+                <thead>
+                  <tr  style="text-align:center;">
+                    <th scope="col">#</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Order By</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Status</th>           
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Razor Pay Order Id</th>
+                    <th scope="col">Operation</th>
+                  </tr>
+                </thead>
+
+                
+                <tbody>
+                  {% for ky in prodorder %}
+                  <tr style="text-align:center;">
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td width="300px">
+                        {% for i in ky.productid %}
+                    {{ i }},<br>
+                    {% endfor %}
+                    </td>  
+                    {% comment %} <!--<a href="{% url 'view_patient' id=ky.id %}">--> {% endcomment %}
+                    {% comment %} <td width="200px"><img src="/media/{{ ky.prodpicture }}" alt="dewf" width="100px"></td> {% endcomment %}
+                    <td><a href="{% url 'view_profile' id=ky.id %}">{{ ky.userid }}</a></td>
+                    <td>{{ ky.orderdate.date|date:"d-m-Y" }}</td>
+                    <td>
+                      {% if ky.order_status == True %}
+                      <p style="background-color:#198754;color:#ffffff;width:100px;border-radius:20px;text-align:center;padding:5px;">Completed</p>
+                      {% else %}
+                         <p style="background-color:#ffc107;color:#ffffff;width:100px;border-radius:20px;text-align:center;padding:5px;">Pending</p>
+                      {% endif %}
+                    </td>
+                    <td>{{ ky.quantity }}</td>
+                    <td>₹ {{ ky.order_price }}</td>
+                    <td>{{ ky.razor_pay_order_id }}</td>
+                    <td style="text-align: center;">
+                      <a class="btn btn-success" style="border-radius:50%;" href="{% url 'update_ord' id=ky.id %}"> <i class="fa fa-pencil" style="font-size: 14px;"> </i> </a>
+                      {% comment %} <a class="btn btn-danger" style="border-radius:50%;" href="{% url 'del_pati' id=ky.id %}"><i class="fa fa-trash-o" style="font-size: 14px;"></i></a> {% endcomment %}
+                    </td> 
+                    
+                      
+                    </tr>
+                  {% endfor %}
+                 
+                </tbody>
+              </table>
+              <!-- End Default Table Example -->
+            </div>
+          </div>
+
+          
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  {% endblock content %}
+  

@@ -1,0 +1,83 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+        
+       <section class="as_breadcrum_wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h1>Product</h1> 
+
+                        <ul class="breadcrumb"> 
+                            <li><a href="#">Home</a></li>
+                            <li>product</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="as_shop_wrapper as_padderBottom90 as_padderTop80">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                        <div class="as_shop_sidebar">
+                            {% comment %} <div class="as_widget as_search_widget">
+                                <input type="text" name="" class="form-control" id="" placeholder="Product Search"/>
+                                <span><img src="assets/images/svg/search.svg" alt=""></span>
+                            </div> {% endcomment %}
+                            <div class="as_widget as_category_widget">
+                                <h3 class="as_widget_title">Product</h3>
+
+                               
+                            </div>
+
+                           
+                        </div>
+                    </div>
+                    <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
+                        <div class="as_shop_topbar">
+                            {% comment %} <span class="as_result_text">Showing 1–9 of 15 results</span> {% endcomment %}
+                            {% comment %} <div class="as_select_box">
+                                <select class="form-control" data-placeholder="Default Shorting">
+                                    <option value="male">By Name</option>
+                                    <option value="female">By Price</option>
+                                </select>
+                            </div>  {% endcomment %}
+                        </div>
+                        <div class="row">
+                            {% for prod in getorderlist %}
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="as_product_box">
+                                    <div class="as_product_img">
+                                        <img src="/media/{{ prod.prodpicture }}" alt="" class="img-responsive">
+                                    </div> 
+                                    <div class="as_product_detail">
+                                        <h4 class="as_subheading">{{ prod.productid }}</h4>
+                                        <span class="as_price">₹ {{ prod.price }} <span class="as_orange"></span></span>
+                                        <a href="{% url 'proddetail' id=prod.id %}" class="as_btn">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            
+                        </div>
+                        <!--<div class="as_pagination as_padderTop50">-->
+                        <!--    <ul class="text-right">-->
+                        <!--        <li class="as_prev"><span>prev</span></li>-->
+                        <!--        <li class="as_active"><a href="javascript:;">1</a></li>-->
+                        <!--        <li><a href="javascript:;">2</a></li>-->
+                        <!--        <li><a href="javascript:;">3</a></li>-->
+                        <!--        <li class="as_next"><a href="javascript:;">next</a></li>-->
+                        <!--    </ul>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+
+    {% endblock content %}

@@ -1,0 +1,636 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Adminpanel - Ask2Astro</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="{% static 'assets/images/astrologo.png' %}" type="image/x-icon">
+  <link href="{% static 'assets2/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets2/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets2/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets2/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets2/vendor/quill/quill.snow.css' %}" rel="stylesheet">
+  <link href="{% static 'assets2/vendor/quill/quill.bubble.css' %}" rel="stylesheet">
+  <link href="{% static 'assets2/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+  <link href="{% static 'assets2/vendor/simple-datatables/style.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets2/css/style.css' %}" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: NiceAdmin - v2.5.0
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+  
+  <style>
+    #confirmation-checkbox {
+  display: none;
+}
+
+#confirmation-message {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+#confirmation-checkbox:checked ~ #confirmation-message {
+  display: block;
+}
+</style>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="/admin-panel/index/" class="logo d-flex align-items-center">
+        <img src="{% static 'assets/images/astro-logo.png' %}" alt="">
+        {% comment %} <span class="d-none d-lg-block">Smart Mx</span> {% endcomment %}
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+    
+    {% block content2 %}
+    <div class="search-bar">
+      <form class="search-form d-flex align-items-center">
+        {% comment %} {% csrf_token %}
+        <input type="search"   placeholder="Search" title="Enter search keyword">
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button> {% endcomment %}
+      </form>
+    </div><!-- End Search Bar -->
+    {% endblock content2 %}
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+
+        <li class="nav-item dropdown pe-3">
+
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            {% comment %} <img src="/media/{{ profImg.image }}" alt="Profile" class="rounded-circle"> {% endcomment %}
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{ request.user.username }}</span>
+          </a><!-- End Profile Iamge Icon -->
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">            
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="/logout/">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="/admin-panel/changepassword/{{request.user.id}}/">
+                <i class="bi bi-grid"></i>
+                <span>Forgot Password</span>
+              </a>
+            </li>
+
+          </ul><!-- End Profile Dropdown Items -->
+        </li><!-- End Profile Nav -->
+
+      </ul>
+    </nav><!-- End Icons Navigation -->
+
+  </header><!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <li class="nav-item">
+        <a class="nav-link " href="/admin-panel/index/">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+     
+         
+         
+          <!--<li>-->
+          <!--  <a class="nav-link " href="/admin-panel/getpandit/">-->
+          <!--    <i class="bi bi-menu-button-wide"></i><span>Pandit</span>-->
+          <!--  </a>-->
+          <!--</li>-->
+          <li>
+            <a class="nav-link " href="/admin-panel/getcategory/">
+              <i class="bi bi-menu-button-wide"></i><span>Product Category</span>
+            </a>
+          </li>
+
+          <li>
+            <a class="nav-link " href="/admin-panel/getproducts/">
+              <i class="bi bi-menu-button-wide"></i><span>Product</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-link " href="/admin-panel/getproductorder/">
+              <i class="bi bi-menu-button-wide"></i><span>Product Order</span>
+            </a>
+          </li>
+
+          <li>
+            <a class="nav-link " href="/admin-panel/getpujacategory/">
+              <i class="bi bi-menu-button-wide"></i><span>Puja Category</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-link " href="/admin-panel/getpuja/">
+              <i class="bi bi-menu-button-wide"></i><span>Puja</span>
+            </a>
+          </li>
+          
+          <li>
+            <a class="nav-link " href="/admin-panel/getslottime/">
+              <i class="bi bi-menu-button-wide"></i><span>Time Slot</span>
+            </a>
+          </li>
+
+          <li>
+            <a class="nav-link " href="/admin-panel/getpoojaslot/">
+              <i class="bi bi-menu-button-wide"></i><span>Puja Booking Order</span>
+            </a>
+          </li>
+          
+          <li>
+            <a class="nav-link " href="/admin-panel/gethoroscopcate/">
+              <i class="bi bi-menu-button-wide"></i><span>Horoscope Category</span>
+            </a>
+          </li>
+
+          <li>
+            <a class="nav-link " href="/admin-panel/getfaqcategory/">
+              <i class="bi bi-menu-button-wide"></i><span>Ask Question Category</span>
+            </a>
+          </li>
+
+          <li>
+            <a class="nav-link " href="/admin-panel/getfaqasktime/">
+              <i class="bi bi-menu-button-wide"></i><span>Answer Time and Price</span>
+            </a>
+          </li>
+
+          <li>
+            <a class="nav-link " href="/admin-panel/getfaq/">
+              <i class="bi bi-menu-button-wide"></i><span>Ask Question</span>
+            </a>
+          </li>
+          
+          <li>
+            <a class="nav-link " href="/admin-panel/getaskquetionhis/">
+              <i class="bi bi-menu-button-wide"></i><span>Ask Question Paymets</span>
+            </a>
+          </li>
+
+          <li>
+            <a class="nav-link " href="/admin-panel/getblog/">
+              <i class="bi bi-menu-button-wide"></i><span>Blog</span>
+            </a>
+          </li>
+          
+           <li>
+            <a class="nav-link " href="/admin-panel/getusers/">
+              <i class="bi bi-menu-button-wide"></i><span>All User</span>
+            </a>
+          </li>
+          
+          <li>
+            <a class="nav-link " href="/admin-panel/allcarts/">
+              <i class="bi bi-menu-button-wide"></i><span>Cart</span>
+            </a>
+          </li>
+          
+          <li>
+            <a class="nav-link " href="/admin-panel/allpujacarts/">
+              <i class="bi bi-menu-button-wide"></i><span>Puja Cart</span>
+            </a>
+          </li>
+
+          <li>
+            <a class="nav-link " href="/admin-panel/getsupport/">
+              <i class="bi bi-menu-button-wide"></i><span>Customer Support</span>
+            </a>
+          </li>
+
+          <li>
+            <a class="nav-link " href="/admin-panel/getfamilyfriend/">
+              <i class="bi bi-menu-button-wide"></i><span>Family/Friend Profile</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a class="nav-link " href="/admin-panel/getcountrycode/">
+              <i class="bi bi-menu-button-wide"></i><span>Country Code</span>
+            </a>
+          </li>
+
+          
+          
+    </ul>
+
+  </aside><!-- End Sidebar-->
+
+
+  {% block content %}
+  
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <!--<nav>-->
+      <!--  <ol class="breadcrumb">-->
+      <!--    <li class="breadcrumb-item"><a href="index.html">Home</a></li>-->
+      <!--    <li class="breadcrumb-item active">Dashboard</li>-->
+      <!--  </ol>-->
+      <!--</nav>-->
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        
+     
+      </div>
+      <div class="row">
+
+        <!-- Left side columns -->
+        {% comment %} <div class="col-lg-12"> {% endcomment %}
+          <div class="row">
+
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-4">
+              <div class="card info-card sales-card">
+
+               
+                <div class="card-body">
+                  <h5 class="card-title">Today's Puja</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-person"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ user }}</h6>
+                      
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+            
+           
+            <!-- Revenue Card -->
+            <div class="col-xxl-4 col-md-4">
+              <div class="card info-card revenue-card">
+
+                
+
+                <div class="card-body">
+                  <h5 class="card-title">Today's Order</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ todayorder }}</h6>
+                      
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Revenue Card -->
+
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-4">
+              <div class="card info-card sales-card">
+
+                <a href="/admin-panel/allpendingpuja/"
+                <div class="card-body">
+                  <h5 class="card-title">Total pending Puja</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-bag-plus-fill"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ pedingpuj }}</h6>
+                      
+
+                    </div>
+                  </div>
+                </div>
+                </a>
+              </div>
+            </div><!-- End Sales Card -->
+          
+       
+
+          </div>
+        {% comment %} </div><!-- End Left side columns --> {% endcomment %}
+
+     
+      </div>
+
+      <div class="row">
+
+        <!-- Left side columns -->
+        {% comment %} <div class="col-lg-12"> {% endcomment %}
+          <div class="row">
+
+            
+            
+            <div class="col-xxl-4 col-md-4">
+              <div class="card info-card sales-card">
+
+               <a href="/admin-panel/allpendingorder/">
+                <div class="card-body">
+                  <h5 class="card-title">Total Pending Order</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-bookmarks-fill"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ pedingord }}</h6>
+                      
+
+                    </div>
+                  </div>
+                </div>
+                </a>
+
+              </div>
+            </div>
+            <!-- Revenue Card -->
+
+             <!-- Sales Card -->
+             <div class="col-xxl-4 col-md-4">
+              <div class="card info-card sales-card">
+
+               
+                <div class="card-body">
+                  <h5 class="card-title">Today's question</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-person"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ pujaobj }}</h6>
+                      
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+            <div class="col-xxl-4 col-md-4">
+              <div class="card info-card revenue-card">
+
+                
+
+                <div class="card-body">
+                  <h5 class="card-title">Total Unanswered question</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-bookmark-plus-fill"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ pedingans }}</h6>
+                      
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Revenue Card -->
+
+
+          
+       
+
+          </div>
+
+          <div class="row">
+
+           
+            
+            <div class="col-xxl-4 col-md-4">
+              <div class="card info-card sales-card">
+
+               
+                <div class="card-body">
+                  <h5 class="card-title">Upcoming Puja</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart-plus-fill"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ prodorder }}</h6>
+                      
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!-- Revenue Card -->
+            <div class="col-xxl-4 col-md-4">
+              <div class="card info-card revenue-card">
+
+                
+
+                <div class="card-body">
+                  <h5 class="card-title">Out of stock</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-bookmark-check-fill"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ outofstock }}</h6>
+                      
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Revenue Card -->
+
+            <!--<div class="col-xxl-4 col-md-4">-->
+            <!--  <div class="card info-card sales-card">-->
+
+               
+            <!--    <div class="card-body">-->
+            <!--      <h5 class="card-title">Total Pandit</h5>-->
+
+            <!--      <div class="d-flex align-items-center">-->
+            <!--        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">-->
+            <!--          <i class="bi bi-person"></i>-->
+            <!--        </div>-->
+            <!--        <div class="ps-3">-->
+            <!--          <h6>{{ pandit }}</h6>-->
+                      
+
+            <!--        </div>-->
+            <!--      </div>-->
+            <!--    </div>-->
+
+            <!--  </div>-->
+            <!--</div>-->
+          
+        <!--<div class="col-xxl-4 col-md-4">-->
+        <!--      <div class="card info-card sales-card">-->
+
+               
+        <!--        <div class="card-body">-->
+        <!--          <h5 class="card-title">Total Ask Question</h5>-->
+
+        <!--          <div class="d-flex align-items-center">-->
+        <!--            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">-->
+        <!--              <i class="bi bi-chat-left-dots-fill"></i>-->
+        <!--            </div>-->
+        <!--            <div class="ps-3">-->
+        <!--              <h6>{{ qus }}</h6>-->
+                      
+
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
+
+        <!--      </div>-->
+        <!--    </div>-->
+
+          </div>
+
+          <div class="row">
+
+            <!-- Sales Card -->
+            <!--<div class="col-xxl-4 col-md-4">-->
+            <!--  <div class="card info-card sales-card">-->
+
+               
+            <!--    <div class="card-body">-->
+            <!--      <h5 class="card-title">Total Ask Question Category</h5>-->
+
+            <!--      <div class="d-flex align-items-center">-->
+            <!--        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">-->
+            <!--          <i class="bi bi-patch-question-fill"></i>-->
+            <!--        </div>-->
+            <!--        <div class="ps-3">-->
+            <!--          <h6>{{ catefaq }}</h6>-->
+                      
+
+            <!--        </div>-->
+            <!--      </div>-->
+            <!--    </div>-->
+
+            <!--  </div>-->
+            <!--</div>-->
+            <!-- End Sales Card -->
+            
+           
+
+            
+            <!-- Revenue Card -->
+            {% comment %} <div class="col-xxl-4 col-md-4">
+              <div class="card info-card revenue-card">
+
+                
+
+                <!--<div class="card-body">-->
+                <!--  <h5 class="card-title">Total Puja Slot</span></h5>-->
+
+                <!--  <div class="d-flex align-items-center">-->
+                <!--    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">-->
+                <!--      <i class="bi bi-people"></i>-->
+                <!--    </div>-->
+                <!--    <div class="ps-3">-->
+                <!--      <h6>{{ pujaslot }}</h6>-->
+                      
+                <!--    </div>-->
+                <!--  </div>-->
+                <!--</div>-->
+
+              </div>
+            </div><!-- End Revenue Card --> {% endcomment %}
+
+
+          
+       
+
+          </div>
+        {% comment %} </div><!-- End Left side columns --> {% endcomment %}
+
+     
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  {% endblock content %}
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+    <div class="copyright">
+      &copy; Copyright <strong><span>Ask2Astrology</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+      <!-- All the links in the footer should remain intact. -->
+      <!-- You can delete the links only if you purchased the pro version. -->
+      <!-- Licensing information: https://bootstrapmade.com/license/ -->
+      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+      Designed by <a href="https://techpanda.asia/">TechpandaMade</a>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets2/vendor/apexcharts/apexcharts.min.js' %}"></script>
+  <script src="{% static 'assets2/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets2/vendor/chart.js/chart.umd.js' %}"></script>
+  <script src="{% static 'assets2/vendor/echarts/echarts.min.js' %}"></script>
+  <script src="{% static 'assets2/vendor/quill/quill.min.js' %}"></script>
+  <script src="{% static 'assets2/vendor/simple-datatables/simple-datatables.js' %}"></script>
+  <script src="{% static 'assets2/vendor/tinymce/tinymce.min.js' %}"></script>
+  <script src="{% static 'assets2/vendor/php-email-form/validate.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets2/js/main.js' %}"></script>
+
+</body>
+
+</html>

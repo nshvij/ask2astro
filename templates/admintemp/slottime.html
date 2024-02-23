@@ -1,0 +1,78 @@
+{% extends 'admintemp/index.html' %}
+{% load static %}
+
+
+
+
+  {% block content %}
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Slot Time</h1>
+      {% comment %} <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Tables</li>
+          <li class="breadcrumb-item active">General</li>
+        </ol>
+      </nav> {% endcomment %}
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body" style="padding:10px;">
+              <a href="/admin-panel/addslottime/"><button type="submit" class="btn btn-primary col-md-3">Add Slot Time</button></a>
+              <!-- Default Table -->
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Slot Time</th>
+                    <th scope="col" style="text-align: center;">Operation</th>         
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for ky in slot %}
+                  <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{ ky.slottime }}</td>
+                    <td style="text-align: center;"><a class="btn btn-success" style="border-radius:50%;" href="{% url 'update_slt' id=ky.id %}"> <i class="fa fa-pencil" style="font-size: 14px;"> </i> </a>
+                      <!--<a class="btn btn-danger" style="border-radius:50%;" href="{% url 'del_slt' id=ky.id %}"><i class="fa fa-trash-o" style="font-size: 14px;"></i></a>-->
+                     
+                     <input type="checkbox" id="confirmation-checkbox">
+                      <label for="confirmation-checkbox"><span class="btn btn-danger" style="border-radius:50%;" ><i class="fa fa-trash-o" style="font-size: 14px;"></i></span></label>
+                      <div id="confirmation-message">
+                        <p>Are you sure you want to Delete?</p>
+                        <a  href="{% url 'del_slt' id=ky.id %}"><button>OK</button></a>
+                        <button id="cancel-button">Cancel</button>
+                      </div>
+                      
+                    </td>
+                      
+                    </tr>
+                  {% endfor %}
+                 
+                </tbody>
+              </table>
+              <!-- End Default Table Example -->
+            </div>
+          </div>
+
+          
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  
+  <script>
+    var cancelButton = document.getElementById('cancel-button');
+cancelButton.addEventListener('click', function() {
+  var confirmationCheckbox = document.getElementById('confirmation-checkbox');
+  confirmationCheckbox.checked = false;
+});
+</script>
+  {% endblock content %}
+  

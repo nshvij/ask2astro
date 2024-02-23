@@ -1,0 +1,62 @@
+{% extends 'index.html' %}
+{% load static %}
+
+
+
+
+  {% block content %}
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>All User</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Tables</li>
+          <li class="breadcrumb-item active">General</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body" style="padding:10px;">
+              <a href="/admin-panel/adddoctor/"><button type="submit" class="btn btn-primary col-md-3">Add Doctor</button></a>
+              <!-- Default Table -->
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Doctor Name</th>
+                    <th scope="col" style="text-align: center;">Operation</th>         
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for ky in users %}
+                  <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{ ky.doctorname }}</td>
+                    <td style="text-align: center;"><a class="btn btn-success" style="border-radius:50%;" href="{% url 'update_doc' id=ky.id %}"> <i class="fa fa-pencil" style="font-size: 14px;"> </i> </a>
+                      <a class="btn btn-danger" style="border-radius:50%;" href="{% url 'del_doc' id=ky.id %}"><i class="fa fa-trash-o" style="font-size: 14px;"></i></a>
+                     
+                    </td>
+                      
+                    </tr>
+                  {% endfor %}
+                 
+                </tbody>
+              </table>
+              <!-- End Default Table Example -->
+            </div>
+          </div>
+
+          
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  {% endblock content %}
+  
