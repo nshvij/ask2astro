@@ -19,6 +19,205 @@ from django.core.mail import send_mail
 from phonepe.sdk.pg.payments.v1.payment_client import PhonePePaymentClient
 import uuid
 from phonepe.sdk.pg.payments.v1.models.request.pg_pay_request import PgPayRequest
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.backends import default_backend
+import base64
+import json
+
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# HELPER FUNCTION
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def calculate_sha256_string(input_string):
+    # Create a hash object using the SHA-256 algorithm
+    sha256 = hashes.Hash(hashes.SHA256(), backend=default_backend())
+    # Update hash with the encoded string
+    sha256.update(input_string.encode('utf-8'))
+    # Return the hexadecimal representation of the hash
+    return sha256.finalize().hex()
+
+
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def base64_encode(input_dict):
+    # Convert the dictionary to a JSON string
+    json_data = json.dumps(input_dict)
+    # Encode the JSON string to bytes
+    data_bytes = json_data.encode('utf-8')
+    # Perform Base64 encoding and return the result as a string
+    return base64.b64encode(data_bytes).decode('utf-8')
+
+def payment_return(transactionId):
+    merchant_id = settings.merchant_id
+    salt_index=settings.salt_index
+    salt_key=settings.salt_key
+    # form_data = request.POST
+    # form_data_dict = dict(form_data)
+    # transaction_id = form_data.get('transactionId', None)
+    transaction_id = transactionId
+
+    if transaction_id:
+        request_url = f'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/{merchant_id}/' + transaction_id
+        sha256_Pay_load_String = '/pg/v1/status/PGTESTPAYUAT/' + transaction_id + salt_key
+        sha256_val = calculate_sha256_string(sha256_Pay_load_String)
+        checksum = sha256_val + '###' + str(salt_index)
+        headers = {
+            'Content-Type': 'application/json',
+            'X-VERIFY': checksum,
+            'X-MERCHANT-ID': transaction_id,
+            'accept': 'application/json',
+        }
+        response = requests.get(request_url, headers=headers)
+        return response
+
+def AddToWalletSuccessView(request):
+    # Fetch transaction_id from the URL
+    transaction_id = request.GET.get('transaction_id')
+    prodid = request.GET.get('prodid')
+    response = payment_return(transaction_id)
+    res = response.json()
+    if res['data']['state'] == 'COMPLETED' and transaction_id == res['data']['merchantTransactionId']:
+        amount = int(res['data']['amount'])/100
+        ### AddWalletAmount ###
+        user = request.user.id
+        qapay = QusAndAnswerPayment.objects.filter(userid=user, razor_pay_order_id='Wallet')
+        prodpay = Order.objects.filter(userid=user, razor_pay_order_id='Wallet')
+        pujapay = PoojaOrder.objects.filter(userid=user, razor_pay_order_id='Wallet')
+        p, q, r = 0, 0, 0
+        for m in qapay:
+            p = p + float(m.order_price)
+
+        for n in prodpay:
+            q = q + float(n.order_price)
+
+        for o in pujapay:
+            r = r + float(o.order_price)
+
+        z = p + q + r
+        prod = WalletAmt.objects.filter(userid=user)
+        c = 0
+        for i in prod:
+            c = c + float(i.amount)
+
+
+        var = WalletAdd(userwallet_id=user, walletamount=amount)
+        var.save()
+        uss = PayByWalletAmount.objects.filter(userid_id=request.user.id).exists()
+        am = (float(c) - float(z)) + float(amount)
+        if uss:
+            var2 = PayByWalletAmount.objects.filter(userid_id=user)
+            var2.update(walletid=am)
+        else:
+            var1 = PayByWalletAmount(userid_id=user, walletid=am)
+            var1.save()
+
+        ### PaymentByRazorpay ###
+        date = datetime.now()
+        phone_pay_order_id = transaction_id
+
+        orderobj = WalletAmt(walt_id=prodid, userid_id=user, amount=amount, orderdate=date,
+                             razor_pay_order_id=phone_pay_order_id, order_status=True)
+        orderobj.save()
+
+        messages.success(request, "Add wallet amount successfull..")
+        count_cart = Cart.objects.filter(user_id=user).count()
+        count_puja = PujaSlotBooking.objects.filter(user_id=user).count()
+        return render(request, "addtowalletsuccess.html",{'totalamt': amount, 'cart': count_cart, 'pooja': count_puja})
+    return render(request, "addtowalletfailure.html")
+
+def OrderSuccessView(request):
+    # Fetch transaction_id from the URL
+    transaction_id = request.GET.get('transaction_id')
+    amount = request.GET.get('amount')
+    response = payment_return(transaction_id)
+    res = response.json()
+    if res['data']['state'] == 'COMPLETED' and transaction_id == res['data']['merchantTransactionId']:
+        user = request.user.id
+        prod = Cart.objects.filter(user_id=user).order_by('id').reverse()
+        pi = []
+        qt = 0
+        for i in prod:
+            i = pi.append(i.product.prodname)
+        for i in prod:
+            qt += int(i.quantity)
+
+        prodid = pi
+        date = datetime.now()
+        amount = int(amount)
+        phone_pay_order_id = transaction_id
+
+        orderobj = Order(productid=prodid, userid_id=user, orderdate=date, order_price=amount,
+                         razor_pay_order_id=phone_pay_order_id, order_status=False, address=request.user.currentaddress,
+                         quantity=qt)
+        orderobj.save()
+
+        Cart.objects.filter(user_id=user).delete()
+        count_cart = Cart.objects.filter(user_id=user).count()
+        count_puja = PujaSlotBooking.objects.filter(user_id=user).count()
+        return render(request, "ordersuccess.html", {'cart': count_cart, 'pooja': count_puja})
+    return render(request, "orderfailure.html")
+
+
+def PujaSuccessView(request):
+    # Fetch transaction_id from the URL
+    transaction_id = request.GET.get('transaction_id')
+    amount = request.GET.get('amount')
+    response = payment_return(transaction_id)
+    res = response.json()
+    if res['data']['state'] == 'COMPLETED' and transaction_id == res['data']['merchantTransactionId']:
+        user = request.user.id
+        prod = PujaSlotBooking.objects.filter(user_id=request.user.id).order_by('id').reverse()
+        pi, pd = [], []
+        for i in prod:
+            pi.append(i.pooja.name)
+
+        for i in prod:
+            pd.append(i.dateofpuja)
+
+        pujadate = pd
+        prodid = pi
+        date = datetime.now()
+        phone_pay_order_id = transaction_id
+
+        orderobj = PoojaOrder(pujaid=prodid, userid_id=user, orderdate=date, order_price=amount, bookeddate=pujadate,
+                              razor_pay_order_id=phone_pay_order_id, order_status=False,
+                              address=request.user.currentaddress)
+        orderobj.save()
+
+        PujaSlotBooking.objects.filter(user_id=user).delete()
+        count_cart = Cart.objects.filter(user_id=user).count()
+        count_puja = PujaSlotBooking.objects.filter(user_id=user).count()
+        return render(request, "pujasuccess.html", {'cart': count_cart, 'pooja': count_puja})
+    return render(request, "pujafailure.html")
+
+def AskAstroSuccessView(request):
+    # Fetch transaction_id from the URL
+    transaction_id = request.GET.get('transaction_id')
+    amount = request.GET.get('amount')
+    category_id = request.GET.get('category_id')
+    answer_time = request.GET.get('answer_time')
+    friend = request.GET.get('friend')
+    question = request.GET.get('question')
+    current_date = datetime.now()
+    response = payment_return(transaction_id)
+    res = response.json()
+    if res['data']['state'] == 'COMPLETED' and transaction_id == res['data']['merchantTransactionId']:
+        user = request.user.id
+
+        user_obj = QusAndAnswer(category_id=category_id, answertime_id=answer_time, qus=question, userid_id=user, ask_date=current_date, friend=friend)
+        user_obj.save()
+
+        prod = QusAndAnswer.objects.filter(userid=user)
+        prodid = prod[len(prod) - 1].id
+        phone_pay_order_id = transaction_id
+
+        orderobj = QusAndAnswerPayment(askqusid_id=prodid, userid_id=user, orderdate=current_date, order_price=amount, razor_pay_order_id=phone_pay_order_id, order_status=True)
+        orderobj.save()
+
+        prod.update(is_paid=True)
+
+        count_cart = Cart.objects.filter(user_id=user).count()
+        count_puja = PujaSlotBooking.objects.filter(user_id=user).count()
+        return render(request, "askastrosuccess.html", {'cart': count_cart, 'pooja': count_puja})
+    return render(request, "askastrofailure.html")
 
 
 def HomePage(request):
@@ -867,41 +1066,44 @@ def ViewCartProduct(request):
         count_cart = Cart.objects.filter(user_id=current_user.id).count()
         return render(request, "showcart.html", {'cartprod':prod, 'item':count_cart, 'totalamt':c, 'mylist':mylist,'tot':tot,'cart':countcart,'pooja':count_puja})
     except:
-        return render(request, 'showcart.html')
+        return render(request, 'showcart.html', {'cart':countcart,'pooja':count_puja})
         
         
         
 
 def OrderPlaceAddres(request):
     #-===================================
-        current_user = User.objects.get(username=request.user)
-        countcart = Cart.objects.filter(user_id=current_user.id).count()
-        count_puja = PujaSlotBooking.objects.filter(user_id=current_user.id).count()
-    
-        if request.method == 'POST':
-            addre = request.POST['address']
-            mobileno = request.POST['mobileno']
-            houseno = request.POST['houseno']
-            area = request.POST['area']
-            landmark = request.POST['landmark']
-            pincode = request.POST['pincode']
-            towncity = request.POST['towncity']
-            state = request.POST['state']
-            usr  = request.user.id
+    current_user = User.objects.get(username=request.user)
+    countcart = Cart.objects.filter(user_id=current_user.id).count()
+    count_puja = PujaSlotBooking.objects.filter(user_id=current_user.id).count()
+    if not countcart:
+        messages.error(request, 'Cart is Empty.')
+        return redirect('/showcart/')
+
+    if request.method == 'POST':
+        addre = request.POST['address']
+        mobileno = request.POST['mobileno']
+        houseno = request.POST['houseno']
+        area = request.POST['area']
+        landmark = request.POST['landmark']
+        pincode = request.POST['pincode']
+        towncity = request.POST['towncity']
+        state = request.POST['state']
+        usr  = request.user.id
+
+        uplead = User.objects.filter(id=usr)
+
+        uplead.update(currentaddress=addre,mobileno=mobileno,
+                      houseno=houseno,area=area,landmark=landmark,pincode=pincode,
+                      towncity=towncity)
+        # orderobj.save()
+        return redirect('/checkout/')
             
-            uplead = User.objects.filter(id=usr)
-            
-            uplead.update(currentaddress=addre,mobileno=mobileno,
-                          houseno=houseno,area=area,landmark=landmark,pincode=pincode,
-                          towncity=towncity)
-            # orderobj.save()
-            return redirect('/checkout/')
-            
-        else:
-            usr  = request.user.id
-            getUser = User.objects.get(id=usr) 
-            # uplead = User.objects.filter(id=usr)
-        return render(request, "orderaddress.html",{'getUser':getUser,'cart':countcart,'pooja':count_puja})
+    else:
+        usr  = request.user.id
+        getUser = User.objects.get(id=usr)
+        # uplead = User.objects.filter(id=usr)
+    return render(request, "orderaddress.html",{'getUser':getUser,'cart':countcart,'pooja':count_puja})
     
 
     
@@ -948,7 +1150,7 @@ def Checkout(request):
         total = amt*qty
         ls.append(total)
         tot = sum(ls)
-        
+
         print(tot)
         
         mylist = zip(prod, ls)
@@ -984,8 +1186,8 @@ def Checkout(request):
     phonepe_client = PhonePePaymentClient(merchant_id=settings.merchant_id, salt_key=settings.salt_key,
                                           salt_index=settings.salt_index, env=settings.env)
     unique_transaction_id = str(uuid.uuid4())
-    ui_redirect_url = settings.redirect_base_url + reverse("payid")
-    s2s_callback_url = settings.redirect_base_url + reverse("payid")
+    ui_redirect_url = settings.redirect_base_url + reverse("order_success") + f'?transaction_id={unique_transaction_id}&amount={int(tot)}'
+    s2s_callback_url = settings.redirect_base_url + reverse("order_success") + f'?transaction_id={unique_transaction_id}&amount={int(tot)}'
     amount = int(tot) * 100
     id_assigned_to_user_by_merchant = user.id
     pay_request = PgPayRequest.pay_page_pay_request_builder(merchant_transaction_id=unique_transaction_id,
@@ -996,15 +1198,15 @@ def Checkout(request):
     pay_page_response = phonepe_client.pay(pay_request)
     pay_page_url = pay_page_response.data.instrument_response.redirect_info.url
 
-    prodid = pi
-    usr = request.user.id
-    date = datetime.now()
-    # quantity= request.POST['qty']
-    amount = pay_request.amount / 100
-    phone_pay_order_id = pay_page_response.data.merchant_transaction_id
-
-    orderobj = Order(productid=prodid, userid_id=usr, orderdate=date, order_price=amount, razor_pay_order_id=phone_pay_order_id, order_status=False, address=request.user.currentaddress,quantity=qt)
-    orderobj.save()
+    # prodid = pi
+    # usr = request.user.id
+    # date = datetime.now()
+    # # quantity= request.POST['qty']
+    # amount = pay_request.amount / 100
+    # phone_pay_order_id = pay_page_response.data.merchant_transaction_id
+    #
+    # orderobj = Order(productid=prodid, userid_id=usr, orderdate=date, order_price=amount, razor_pay_order_id=phone_pay_order_id, order_status=False, address=request.user.currentaddress,quantity=qt)
+    # orderobj.save()
 
     print(tot)  
     print(ls)
@@ -1039,15 +1241,13 @@ def QusAndAnswerView(request):
             qus = request.POST['qus']
             # username = request.user.id
             username = request.POST['ask_qus']
-            date = datetime.now()
-            
-            
-            
-            user_obj = QusAndAnswer(category_id=catname, answertime_id=timing, qus=qus, userid_id=request.user.id,ask_date=date,friend=username)
-            user_obj.save()
+            # date = datetime.now()
+
+            # user_obj = QusAndAnswer(category_id=catname, answertime_id=timing, qus=qus, userid_id=request.user.id,ask_date=date,friend=username)
+            # user_obj.save()
             
             #(request, 'Pay here to get answer successfully.')
-            return redirect('/askquestionpay/')
+            return redirect(f'/askquestionpay/?category_id={catname}&answer_time={timing}&friend={username}&question={qus}')
         else:
             return render(request, "askquestion.html", {'cate':quscat, 'anstime':time, 'relation':profiles,'cart':count_cart,'pooja':count_puja})
     except User.DoesNotExist:
@@ -1063,7 +1263,13 @@ def QusAndAnswerViewPayment(request):
     count_puja = PujaSlotBooking.objects.filter(user_id=current_user.id).count()
     prod11 = PayByWalletAmount.objects.get(userid=user)
     cb = prod11.walletid
-    
+
+    category_id = request.GET.get('category_id')
+    user_id = request.GET.get('user_id')
+    answer_time = request.GET.get('answer_time')
+    friend = request.GET.get('friend')
+    question = request.GET.get('question')
+
     quscat = CategoryOfFAQ.objects.all()
     time = AnswerFAQTime.objects.all()
     current_user = User.objects.get(username=request.user)
@@ -1081,7 +1287,8 @@ def QusAndAnswerViewPayment(request):
     c = 0
     for i in prod:
         c = int(i.answertime.price)
-    print(type(c))  
+
+    print(type(c))
     
     # if float(cb)>=float(c):
 
@@ -1115,8 +1322,9 @@ def QusAndAnswerViewPayment(request):
     phonepe_client = PhonePePaymentClient(merchant_id=settings.merchant_id, salt_key=settings.salt_key,
                                           salt_index=settings.salt_index, env=settings.env)
     unique_transaction_id = str(uuid.uuid4())
-    ui_redirect_url = settings.redirect_base_url + reverse("pujaslot_booking")
-    s2s_callback_url = settings.redirect_base_url + reverse("pujaslot_booking")
+
+    ui_redirect_url = settings.redirect_base_url + reverse("askastro_success") + f'?transaction_id={unique_transaction_id}&amount={c}&category_id={category_id}&answer_time={answer_time}&friend={friend}&question={question}'
+    s2s_callback_url = settings.redirect_base_url + reverse("askastro_success") + f'?transaction_id={unique_transaction_id}&amount={c}&category_id={category_id}&answer_time={answer_time}&friend={friend}&question={question}'
     amount = int(c) * 100
     id_assigned_to_user_by_merchant = user.id
     pay_request = PgPayRequest.pay_page_pay_request_builder(merchant_transaction_id=unique_transaction_id,
@@ -1128,18 +1336,18 @@ def QusAndAnswerViewPayment(request):
     pay_page_url = pay_puja_response.data.instrument_response.redirect_info.url
 
     qustion = prod[len(prod) - 1].qus
-    prodid = prod[len(prod)-1].id
-    usr = request.user.id
-    date = datetime.now()
-    # quantity= request.POST['qty']
+    # prodid = prod[len(prod)-1].id
+    # usr = request.user.id
+    # date = datetime.now()
+    # # quantity= request.POST['qty']
     amount = pay_request.amount / 100
-    phone_pay_order_id = pay_puja_response.data.merchant_transaction_id
-
-    orderobj = QusAndAnswerPayment(askqusid_id=prodid,userid_id=usr,orderdate=date,order_price=amount,razor_pay_order_id=phone_pay_order_id,order_status=True)
-    orderobj.save()
-
-    # updt = QusAndAnswer.objects.filter(id=id)
-    prod.update(is_paid=True)
+    # phone_pay_order_id = pay_puja_response.data.merchant_transaction_id
+    #
+    # orderobj = QusAndAnswerPayment(askqusid_id=prodid,userid_id=usr,orderdate=date,order_price=amount,razor_pay_order_id=phone_pay_order_id,order_status=True)
+    # orderobj.save()
+    #
+    # # updt = QusAndAnswer.objects.filter(id=id)
+    # prod.update(is_paid=True)
 
 
     # return redirect('/askquestion/')
@@ -1646,24 +1854,24 @@ def AddWalletAmount(request):
     print('sssssssssss',chg)
     print("dsdsdsd dsdsddw wewewe",prod)
     if request.method == "POST":
-        user = request.user.id
+        # user = request.user.id
         amount = request.POST['amount']
-        var = WalletAdd(userwallet_id=user, walletamount=amount)
-        var.save()
-        uss=PayByWalletAmount.objects.filter(userid_id=request.user.id).exists()
-        print('hcawdskj',uss)
-        am = (float(c)-float(z))+float(amount)
-        print('jsdnfvjk',amount)
-        print('pppppppppppp',am)
-        if uss:
-            var2=PayByWalletAmount.objects.filter(userid_id=user)
-            var2.update(walletid=am)
-        else:
-            var1 = PayByWalletAmount(userid_id=user, walletid=am)
-            var1.save()
-        
-        messages.success(request, "Add wallet amount successfull..")
-        return redirect('/paymentadmin/')
+        # var = WalletAdd(userwallet_id=user, walletamount=amount)
+        # var.save()
+        # uss=PayByWalletAmount.objects.filter(userid_id=request.user.id).exists()
+        # print('hcawdskj',uss)
+        # am = (float(c)-float(z))+float(amount)
+        # print('jsdnfvjk',amount)
+        # print('pppppppppppp',am)
+        # if uss:
+        #     var2=PayByWalletAmount.objects.filter(userid_id=user)
+        #     var2.update(walletid=am)
+        # else:
+        #     var1 = PayByWalletAmount(userid_id=user, walletid=am)
+        #     var1.save()
+        #
+        # messages.success(request, "Add wallet amount successfull..")
+        return redirect(f'/paymentadmin/?amount={amount}')
     return render(request, "walletamount.html", {'amount':prod, 'amt':chg,'cart':count_cart,'pooja':count_puja})
 
 
@@ -1681,11 +1889,12 @@ def PaymentByRazorpay(request):
     # for i in prod:
     #     i= pi.append(i.id)
     # print("My Product", pi)
-    c = 0
-    for i in prod:
-        c = int(i.walletamount)
-        print("MJKkksdskdfsdkfsdkfsn fksdjfidskjfd", c)
-    print(type(c))
+    # c = 0
+    # for i in prod:
+    #     c = int(i.walletamount)
+    #     print("MJKkksdskdfsdkfsdkfsn fksdjfidskjfd", c)
+    # print(type(c))
+    c = request.GET.get('amount')
 
     ##################################################################################################
     # RAZORPAY CODE
@@ -1717,9 +1926,9 @@ def PaymentByRazorpay(request):
     phonepe_client = PhonePePaymentClient(merchant_id=settings.merchant_id, salt_key=settings.salt_key,
                                           salt_index=settings.salt_index, env=settings.env)
     unique_transaction_id = str(uuid.uuid4())
-    ui_redirect_url = settings.redirect_base_url + reverse("wallet")
-    s2s_callback_url = settings.redirect_base_url + reverse("wallet")
-    amount = c * 100
+    ui_redirect_url = settings.redirect_base_url + reverse("wallet_add_success") + f'?transaction_id={unique_transaction_id}&prodid={prod[0].id}'
+    s2s_callback_url = settings.redirect_base_url + reverse("wallet_add_success") + f'?transaction_id={unique_transaction_id}&prodid={prod[0].id}'
+    amount = int(c) * 100
     id_assigned_to_user_by_merchant = user.id
     pay_page_request = PgPayRequest.pay_page_pay_request_builder(merchant_transaction_id=unique_transaction_id,
                                                                  amount=amount,
@@ -1730,16 +1939,16 @@ def PaymentByRazorpay(request):
     print("pay_page_response ::: ", pay_page_request)
     pay_page_url = pay_page_response.data.instrument_response.redirect_info.url
 
-    prodid = prod[0].id
-    usr = request.user.id
-    date = datetime.now()
-    # quantity= request.POST['qty']
+    # prodid = prod[0].id
+    # usr = request.user.id
+    # date = datetime.now()
+    # # quantity= request.POST['qty']
     amount = pay_page_request.amount / 100
-    phone_pay_order_id = pay_page_response.data.merchant_transaction_id
-
-    orderobj = WalletAmt(walt_id=prodid, userid_id=usr, amount=amount, orderdate=date,
-                         razor_pay_order_id=phone_pay_order_id, order_status=True)
-    orderobj.save()
+    # phone_pay_order_id = pay_page_response.data.merchant_transaction_id
+    #
+    # orderobj = WalletAmt(walt_id=prodid, userid_id=usr, amount=amount, orderdate=date,
+    #                      razor_pay_order_id=phone_pay_order_id, order_status=True)
+    # orderobj.save()
 
     messages.success(request, 'Pay successfully.')
     # return redirect('/askquestion/'))
@@ -1918,8 +2127,8 @@ def CheckoutforPuja(request):
     phonepe_client = PhonePePaymentClient(merchant_id=settings.merchant_id, salt_key=settings.salt_key,
                                           salt_index=settings.salt_index, env=settings.env)
     unique_transaction_id = str(uuid.uuid4())
-    ui_redirect_url = settings.redirect_base_url + reverse("pujaslot_booking")
-    s2s_callback_url = settings.redirect_base_url + reverse("pujaslot_booking")
+    ui_redirect_url = settings.redirect_base_url + reverse("puja_success") + f'?transaction_id={unique_transaction_id}&amount={int(tot)}'
+    s2s_callback_url = settings.redirect_base_url + reverse("puja_success") + f'?transaction_id={unique_transaction_id}&amount={int(tot)}'
     amount = int(tot) * 100
     id_assigned_to_user_by_merchant = user.id
     pay_request = PgPayRequest.pay_page_pay_request_builder(merchant_transaction_id=unique_transaction_id,

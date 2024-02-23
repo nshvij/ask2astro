@@ -55,5 +55,11 @@ urlpatterns = [
     path('contact/',views.ContactUs),
     path('shippingpolicy/',views.ShippingPolicy),    
     path('refundpolicy/',views.RefundPolicy),
-    
+
+    path('payment-status/', views.payment_return, name="payment_status"),
+    path('wallet/add/success/', views.AddToWalletSuccessView, name="wallet_add_success"),
+    path('order/success/', views.OrderSuccessView, name="order_success"),
+    path('puja/success/', views.PujaSuccessView, name="puja_success"),
+    path('askastro/success/', views.AskAstroSuccessView, name="askastro_success")
+
 ]

@@ -8,7 +8,7 @@
 
 
 
-        
+
 
        <section class="as_breadcrum_wrapper">
 
@@ -18,11 +18,11 @@
 
                     <div class="col-lg-12 text-center">
 
-                        <h1>Cart</h1> 
+                        <h1>Cart</h1>
 
 
 
-                        <ul class="breadcrumb"> 
+                        <ul class="breadcrumb">
 
                             <li><a href="#">Home</a></li>
 
@@ -38,19 +38,34 @@
 
         </section>
 
-        
+
 
         <section class="as_shop_wrapper as_padderBottom90 as_padderTop80">
 
             <div class="container">
+                <div class="row">
+            <div class="col">
+            {% if messages %}
+            <ul style="padding: 0;">
+                {% for message in messages %}
+                {% if message.tags == "error" %}
+                    <li style="list-style: none;"><p {% if message.tags %} class="{{ message.tags }}"{% endif %} style="background-color: #FAF8F5;padding: 10px;font-size: 15px;color: rgb(255, 0, 0);border-radius: 10px;">{{ message }}</p></li>
+                {% else %}
+                    <li style="list-style: none;"><p {% if message.tags %} class="{{ message.tags }}"{% endif %} style="background-color: #FAF8F5;padding: 10px;font-size: 15px;color: rgb(48, 197, 48);border-radius: 10px;">{{ message }}</p></li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% endif %}
+            </div>
+        </div>
 
                 <div class="row">
 
 
 
-                    
 
-                   
+
+
 
                     <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
 
@@ -152,15 +167,15 @@
 
                                         <img src="/media/{{ prod.product.prodpicture }}" alt="" class="img-responsive">
 
-    
 
-                                        
 
-    
 
-                                        
 
-                                    </div> 
+
+
+
+
+                                    </div>
 
                                     <div class="as_product_detail">
 
@@ -178,43 +193,43 @@
 
                             {% endfor %} {% endcomment %}
 
-                            
 
 
 
-                            
+
+
 
                         </div>
 
-                        
-
-                        
-
-                     
 
 
 
-                    <!-- <div class="container"> 
 
-                    
+
+
+
+
+                    <!-- <div class="container">
+
+
 
                         <div class="productcont">
 
-                                
+
 
                                 </div>
 
                                 <div class="cart-container">
 
-                                
 
-                                
 
-                                
+
+
+
 
                                 <table id="carttotals" width="137%">
 
-                                    
+
 
                                     <tr>
                                         <td style="color:#ffffff;"><strong>Slot Date & Time</strong></td>
@@ -226,9 +241,9 @@
                                         <td style="font-size:20px;">₹<span id="total">{{tot}}</span></td>
                                     </tr>
 
-                                    
 
-                                    
+
+
 
                                     <!--<tr>->
 
@@ -242,7 +257,7 @@
 
                                     <!--{% comment %} <td>x <span id="itemsquantity">{{item}}</span></td> {% endcomment %}-->
 
-                                    
+
 
                                     <!--<td style="font-size:20px;">₹<span id="total">{{tot}}</span></td>-->
 
@@ -254,15 +269,15 @@
 
                                     <br></br>
 
-                                <div class="cart-buttons">  
+                                <div class="cart-buttons">
 
                                     {% comment %} <button class="as_btn">Empty Cart</button>
 
                                     {% comment %} <button class="as_btn"><a href="/checkout/" class="as_btn">Checkout</a></button> {% endcomment %}
 
-                                    {% comment %} {% url 'proddetail' id=prod.product.id %} {% endcomment %} 
+                                    {% comment %} {% url 'proddetail' id=prod.product.id %} {% endcomment %}
 
-                                    
+
 
                                     <!--<button class="as_btn" id="rzp-button1">Pay with Razorpay</button>->
 
@@ -274,7 +289,7 @@
 
                         </div>
 
-                   
+
 
                     </div> -->
 
@@ -286,7 +301,7 @@
 
 
 
-        
+
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
@@ -320,7 +335,7 @@
 
             },
 
-           
+
 
             "theme": {
 
@@ -360,7 +375,7 @@
 
         </script>
 
-        
+
 
         <script>
 
