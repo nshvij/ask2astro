@@ -742,7 +742,7 @@ def AddPoojaSlot(request, id):
             # (request, "Puja slot already booked")
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
     except User.DoesNotExist:
-             return redirect('/login/')
+        return redirect(f'/login/?next=/pujadetail/{id}/')
     # else:
     #     user=request.user
     #     slot = request.POST['pujaslt']
@@ -910,7 +910,7 @@ def AddToCart(request, id):
             messages.success(request, "Something went wrong!")
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
     except User.DoesNotExist:
-             return redirect('/login/')
+             return redirect(f'/login/?next=/proddetail/{id}/')
         # messages.success(request, "Cart already created!!!")
         # return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
         
@@ -1251,7 +1251,7 @@ def QusAndAnswerView(request):
         else:
             return render(request, "askquestion.html", {'cate':quscat, 'anstime':time, 'relation':profiles,'cart':count_cart,'pooja':count_puja})
     except User.DoesNotExist:
-             return redirect('/login/')
+             return redirect(f'/login/?next=/askquestion/')
             
             
     
@@ -1364,7 +1364,7 @@ def ShowProfileDetail(request):
         current_user = User.objects.get(username=request.user)
         return render(request, "profile.html", {"user":current_user,'cart':count_cart,'pooja':count_puja})
     except User.DoesNotExist:
-             return redirect('/login/')
+             return redirect(f'/login/?next=/profile/')
     
     
 def ShowFAQReply(request):   
@@ -1391,7 +1391,7 @@ def ShowFAQReply(request):
         }
         return render(request, "faqanswer.html", context)
     except User.DoesNotExist:
-             return redirect('/login/')
+             return redirect(f'/login/?next=/faqreply/')
 
 def ShowOrderlist(request):   
     try:
@@ -1417,7 +1417,7 @@ def ShowOrderlist(request):
         }
         return render(request, "userproductorder.html", context)
     except User.DoesNotExist:
-             return redirect('/login/')
+             return redirect(f'/login/?next=/prodorder/')
 
 
 def ShowPojaSlot(request):
@@ -1444,7 +1444,7 @@ def ShowPojaSlot(request):
         }
         return render(request, "userpujaorder.html", context)
     except User.DoesNotExist:
-             return redirect('/login/')
+             return redirect(f'/login/?next=/pujaorder/')
     
 
 def ShowFaqPayment(request):
@@ -1471,7 +1471,7 @@ def ShowFaqPayment(request):
         }
         return render(request, "useruespayment.html", context)
     except User.DoesNotExist:
-             return redirect('/login/')
+             return redirect(f'/login/?next=/faqpay/')
     
 def UserRegister(request):
     code = CountryCode.objects.all()
@@ -1728,7 +1728,7 @@ def SendCustomerSupport(request):
             return redirect('/customersupport/')
         return render(request, "customersupport.html",{'cart':countcart,'pooja':count_puja})
     except:
-             return redirect('/login/')
+             return redirect(f'/login/?next=/customersupport/')
 def HoroscopeView(request):
     # Parse the input string into a datetime object
     input_string = datetime.now()

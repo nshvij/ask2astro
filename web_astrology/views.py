@@ -14,21 +14,22 @@ def login_sys(request):
         
         user = authenticate(username=uname, password=pwd)
         # print(user.date_joined)
+        next_url = request.GET.get('next', '/')
 
         if user:
             login(request, user)
             if user.is_active:
                 if user.is_superuser:
                     return redirect('/admin-panel/index/')
-                elif user.is_user:
-                    return redirect('/')
+                # elif user.is_user:
+                return redirect(next_url)
             else:
                 messages.warning(request, "Your are inactive user!")
-                return redirect('/login/')
+                return redirect(f'/login/?next={next_url}')
             
         else:
             messages.warning(request, "Invalid Userid and password")
-            return redirect('/login/')
+            return redirect(f'/login/?next={next_url}')
     
     return render(request, "login.html")
 	
