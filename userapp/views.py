@@ -156,6 +156,39 @@ def OrderSuccessView(request):
     return render(request, "orderfailure.html")
 
 
+def BuyOrderSuccessView(request):
+    # Fetch transaction_id from the URL
+    transaction_id = request.GET.get('transaction_id')
+    amount = request.GET.get('amount')
+    product_name = request.GET.get('_from')
+    response = payment_return(transaction_id)
+    res = response.json()
+    if res['data']['state'] == 'COMPLETED' and transaction_id == res['data']['merchantTransactionId']:
+        user = request.user.id
+        prod = Products.objects.filter(prodname=product_name).first()
+        pi = []
+        qt = 0
+        for i in prod:
+            i = pi.append(i.product.prodname)
+        for i in prod:
+            qt += int(i.quantity)
+
+        prodid = pi
+        date = datetime.now()
+        amount = int(amount)
+        phone_pay_order_id = transaction_id
+
+        orderobj = Order(productid=prodid, userid_id=user, orderdate=date, order_price=amount,
+                         razor_pay_order_id=phone_pay_order_id, order_status=False, address=request.user.currentaddress,
+                         quantity=qt)
+        orderobj.save()
+
+        count_cart = Cart.objects.filter(user_id=user).count()
+        count_puja = PujaSlotBooking.objects.filter(user_id=user).count()
+        return render(request, "ordersuccess.html", {'cart': count_cart, 'pooja': count_puja})
+    return render(request, "orderfailure.html")
+
+
 def PujaSuccessView(request):
     # Fetch transaction_id from the URL
     transaction_id = request.GET.get('transaction_id')
@@ -1073,10 +1106,18 @@ def ViewCartProduct(request):
 
 def OrderPlaceAddres(request):
     #-===================================
+    item_name = request.GET.get('_from', None)
+    item_quantity = request.GET.get('quantity', None)
+    prod = None
+    if item_name:
+        prod = Products.objects.filter(prodname=item_name).first()
+        if not prod:
+            messages.error(request, 'Item not Found.')
+            return redirect('/products/')
     current_user = User.objects.get(username=request.user)
     countcart = Cart.objects.filter(user_id=current_user.id).count()
     count_puja = PujaSlotBooking.objects.filter(user_id=current_user.id).count()
-    if not countcart:
+    if not countcart and not item_name:
         messages.error(request, 'Cart is Empty.')
         return redirect('/showcart/')
 
@@ -1097,8 +1138,17 @@ def OrderPlaceAddres(request):
                       houseno=houseno,area=area,landmark=landmark,pincode=pincode,
                       towncity=towncity)
         # orderobj.save()
+        if item_name and prod:
+            caloffer = (float(prod.price) * float(prod.offers)) / 100
+            cal = float(prod.price) - caloffer
+            prodquantity = int(prod.quantity) - int(item_quantity)
+            prod.quantity = prodquantity
+            prod.save()
+            context = {"id":prod.id, "prodname": prod.prodname, 'price': cal*int(item_quantity)}
+            request.session['context'] = context
+            return redirect('/buy/')
         return redirect('/checkout/')
-            
+
     else:
         usr  = request.user.id
         getUser = User.objects.get(id=usr)
@@ -1106,9 +1156,82 @@ def OrderPlaceAddres(request):
     return render(request, "orderaddress.html",{'getUser':getUser,'cart':countcart,'pooja':count_puja})
     
 
-    
-    
-    
+def BuyNow(request):
+    current_user = User.objects.get(username=request.user)
+    countcart = Cart.objects.filter(user_id=current_user.id).count()
+    count_puja = PujaSlotBooking.objects.filter(user_id=current_user.id).count()
+    user = User.objects.get(id=request.user.id)
+    prod11 = PayByWalletAmount.objects.get(userid=user)
+    cb = prod11.walletid
+
+    context = request.session['context']
+    prod_id = context['id'] or None
+    prod_name = context['prodname'] or None
+    prod_price = float(context['price']) or None
+    prod = Products.objects.filter(id=int(prod_id)).first()
+    if not prod:
+        messages.error(request, 'Item not Found.')
+        return redirect('/products/')
+
+    # if float(cb)>=float(tot):
+
+    ##################################################################################################
+    # RAZORPAY CODE
+    ##################################################################################################
+    # client = razorpay.Client(auth = (settings.razor_pay_key_id, settings.key_secret) )
+    # payment = client.order.create({ 'amount': tot * 100, 'currency': 'INR', 'payment_capture': 1})
+    # print("******************************")
+    # print(payment)
+    # print("******************************")
+    #
+    # prodid = pi
+    # usr = request.user.id
+    # date = datetime.now()
+    # # quantity= request.POST['qty']
+    # amount = payment['amount']/100
+    # razor_pay_order_id = payment['id']
+    # # address = addr.address
+    #
+    # orderobj = Order(productid=prodid,userid_id=usr,orderdate=date,order_price=amount,razor_pay_order_id=razor_pay_order_id,order_status=False,address=request.user.currentaddress,quantity=qt)
+    # orderobj.save()
+    # messages.success(request, "Order created....")
+
+    # After Checkout cart will 0
+    # prod.delete()
+
+    ##################################################################################################
+    # PHONEPE CODE
+    ##################################################################################################
+    phonepe_client = PhonePePaymentClient(merchant_id=settings.merchant_id, salt_key=settings.salt_key,
+                                          salt_index=settings.salt_index, env=settings.env)
+    unique_transaction_id = str(uuid.uuid4())
+    ui_redirect_url = settings.redirect_base_url + reverse("buy_order_success") + f'?transaction_id={unique_transaction_id}&amount={int(prod_price)}&_from={prod_name}'
+    s2s_callback_url = settings.redirect_base_url + reverse("buy_order_success") + f'?transaction_id={unique_transaction_id}&amount={int(prod_price)}&_from={prod_name}'
+    amount = int(prod_price) * 100
+    id_assigned_to_user_by_merchant = user.id
+    pay_request = PgPayRequest.pay_page_pay_request_builder(merchant_transaction_id=unique_transaction_id,
+                                                            amount=amount,
+                                                            merchant_user_id=id_assigned_to_user_by_merchant,
+                                                            callback_url=s2s_callback_url,
+                                                            redirect_url=ui_redirect_url)
+    pay_page_response = phonepe_client.pay(pay_request)
+    pay_page_url = pay_page_response.data.instrument_response.redirect_info.url
+
+    # prodid = pi
+    # usr = request.user.id
+    # date = datetime.now()
+    # # quantity= request.POST['qty']
+    # amount = pay_request.amount / 100
+    # phone_pay_order_id = pay_page_response.data.merchant_transaction_id
+    #
+    # orderobj = Order(productid=prodid, userid_id=usr, orderdate=date, order_price=amount, razor_pay_order_id=phone_pay_order_id, order_status=False, address=request.user.currentaddress,quantity=qt)
+    # orderobj.save()
+
+    current_user = User.objects.get(username=request.user)
+    count_cart = Cart.objects.filter(user_id=current_user.id).count()
+    return render(request, "checkout.html",{'cb': float(cb), 'tot': float(prod_price), 'item': count_cart, 'payment_url': pay_page_url, 'cart': countcart, 'pooja': count_puja})
+
+
 def Checkout(request):
     
     current_user = User.objects.get(username=request.user)

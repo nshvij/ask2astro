@@ -19,6 +19,7 @@ urlpatterns = [
     path('showcart/', views.ViewCartProduct, name="payid"),
     path('viewproddiscrip/<int:id>/', views.ViewProductdescription, name="viewprod"),
     path('checkout/', views.Checkout),
+    path('buy/', views.BuyNow),
     path('askquestion/', views.QusAndAnswerView),
     path('askquestionpay/', views.QusAndAnswerViewPayment),
     path('profile/', views.ShowProfileDetail),
@@ -59,6 +60,7 @@ urlpatterns = [
     path('payment-status/', views.payment_return, name="payment_status"),
     path('wallet/add/success/', views.AddToWalletSuccessView, name="wallet_add_success"),
     path('order/success/', views.OrderSuccessView, name="order_success"),
+    path('buy/order/success/', views.BuyOrderSuccessView, name="buy_order_success"),
     path('puja/success/', views.PujaSuccessView, name="puja_success"),
     path('askastro/success/', views.AskAstroSuccessView, name="askastro_success")
 

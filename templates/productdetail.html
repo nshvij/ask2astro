@@ -80,7 +80,10 @@
                                     <input type="number"  id="qty" name="quan" min="1" max="{{ detailprod.quantity }}" step="1" value="1"  style="border-style:none">
                                     <button class="qtyplus" aria-hidden="true"  style="border-style:none">&plus;</button>
                                 </p>
-                                <input type="submit" class="as_btn" value="Add To Cart"> 
+                                <input type="submit" class="as_btn" value="Add To Cart">
+                                 <a class="ml-5">
+                                    <button type="button" id="buyNowBtn" class="as_btn">Buy Now</button>
+                                 </a>
                                 {% elif prodquan <= 0 %}
                                     <del><span value="" class="as_btn" style="text-align:center">OUT OF STOCK</span></del>
                                 {% endif %}
@@ -190,7 +193,22 @@
             </div>
         </section>
        
-        <script>
+    <script>
+        document.getElementById("buyNowBtn").addEventListener("click", function() {
+            // Get the quantity selected by the user
+            var quantity = document.getElementById("qty").value;
+
+            // Get the product name from the template variable "detailprod.prodname"
+            var productName = "{{ detailprod.prodname }}";
+
+            // Construct the URL with the quantity and product name as query parameters
+            var redirect_url = "/addresstoorder/?_from=" + productName + "&quantity=" + quantity;
+
+            // Redirect to the URL
+            window.location.href = redirect_url;
+        });
+    </script>
+    <script>
             /*
 * @Adilade Input Quantity Increment
 * 
