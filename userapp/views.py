@@ -1265,8 +1265,8 @@ def QusAndAnswerViewPayment(request):
     cb = prod11.walletid
 
     category_id = request.GET.get('category_id')
-    user_id = request.GET.get('user_id')
     answer_time = request.GET.get('answer_time')
+    answer_price = AnswerFAQTime.objects.get(id=int(answer_time)).price
     friend = request.GET.get('friend')
     question = request.GET.get('question')
 
@@ -1325,7 +1325,7 @@ def QusAndAnswerViewPayment(request):
 
     ui_redirect_url = settings.redirect_base_url + reverse("askastro_success") + f'?transaction_id={unique_transaction_id}&amount={c}&category_id={category_id}&answer_time={answer_time}&friend={friend}&question={question}'
     s2s_callback_url = settings.redirect_base_url + reverse("askastro_success") + f'?transaction_id={unique_transaction_id}&amount={c}&category_id={category_id}&answer_time={answer_time}&friend={friend}&question={question}'
-    amount = int(c) * 100
+    amount = int(answer_price) * 100
     id_assigned_to_user_by_merchant = user.id
     pay_request = PgPayRequest.pay_page_pay_request_builder(merchant_transaction_id=unique_transaction_id,
                                                             amount=amount,
@@ -1335,7 +1335,7 @@ def QusAndAnswerViewPayment(request):
     pay_puja_response = phonepe_client.pay(pay_request)
     pay_page_url = pay_puja_response.data.instrument_response.redirect_info.url
 
-    qustion = prod[len(prod) - 1].qus
+    # qustion = prod[len(prod) - 1].qus
     # prodid = prod[len(prod)-1].id
     # usr = request.user.id
     # date = datetime.now()
@@ -1352,7 +1352,7 @@ def QusAndAnswerViewPayment(request):
 
     # return redirect('/askquestion/')
     
-    return render(request, "checkoutforqa.html", {'cb':float(cb),'tot':float(c),'cate':quscat, 'anstime':time, 'relation':profiles,'cart':count_cart,'pooja':count_puja, 'payment_url':pay_page_url,'qustion':qustion,'amount':amount})
+    return render(request, "checkoutforqa.html", {'cb':float(cb),'tot':float(c),'cate':quscat, 'anstime':time, 'relation':profiles,'cart':count_cart,'pooja':count_puja, 'payment_url':pay_page_url,'qustion':question,'amount':amount})
 # else:
     #     return render(request, "incufficient.html")
  
