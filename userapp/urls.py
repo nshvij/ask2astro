@@ -17,9 +17,10 @@ urlpatterns = [
     path('proddetail/<int:id>/', views.ViewProductDetail, name='proddetail'),
     path('addtocart/<int:id>/', views.AddToCart, name="addcart"),
     path('showcart/', views.ViewCartProduct, name="payid"),
+    path('updatecart/', views.UpdateCartProduct, name="update_cart"),
     path('viewproddiscrip/<int:id>/', views.ViewProductdescription, name="viewprod"),
     path('checkout/', views.Checkout),
-    path('buy/', views.BuyNow),
+    path('buy_checkout/', views.BuyNow, name='buy_now'),
     path('askquestion/', views.QusAndAnswerView),
     path('askquestionpay/', views.QusAndAnswerViewPayment),
     path('profile/', views.ShowProfileDetail),
@@ -60,7 +61,7 @@ urlpatterns = [
     path('payment-status/', views.payment_return, name="payment_status"),
     path('wallet/add/success/', views.AddToWalletSuccessView, name="wallet_add_success"),
     path('order/success/', views.OrderSuccessView, name="order_success"),
-    path('buy/order/success/', views.BuyOrderSuccessView, name="buy_order_success"),
+    path('buy_now/success/', views.BuyOrderSuccessView, name="buy_now_success"),
     path('puja/success/', views.PujaSuccessView, name="puja_success"),
     path('askastro/success/', views.AskAstroSuccessView, name="askastro_success")
 

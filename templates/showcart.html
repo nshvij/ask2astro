@@ -1,394 +1,249 @@
 {% extends 'index.html' %}
-
-
-
 {% load static %}
-
 {% block content %}
-
-
-
-
-
-       <section class="as_breadcrum_wrapper">
-
-            <div class="container">
-
-                <div class="row">
-
-                    <div class="col-lg-12 text-center">
-
-                        <h1>Cart</h1>
-
-
-
-                        <ul class="breadcrumb">
-
-                            <li><a href="#">Home</a></li>
-
-                            <li>cart</li>
-
-                        </ul>
-
-                    </div>
-
-                </div>
-
+<section class="as_breadcrum_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1>Cart</h1>
+                <ul class="breadcrumb">
+                    <li><a href="#">Home</a></li>
+                    <li>cart</li>
+                </ul>
             </div>
+        </div>
+    </div>
+</section>
 
-        </section>
-
-
-
-        <section class="as_shop_wrapper as_padderBottom90 as_padderTop80">
-
-            <div class="container">
-                <div class="row">
+<section class="as_shop_wrapper as_padderBottom90 as_padderTop80">
+    <div class="container">
+        <div class="row">
             <div class="col">
-            {% if messages %}
-            <ul style="padding: 0;">
-                {% for message in messages %}
-                {% if message.tags == "error" %}
-                    <li style="list-style: none;"><p {% if message.tags %} class="{{ message.tags }}"{% endif %} style="background-color: #FAF8F5;padding: 10px;font-size: 15px;color: rgb(255, 0, 0);border-radius: 10px;">{{ message }}</p></li>
-                {% else %}
-                    <li style="list-style: none;"><p {% if message.tags %} class="{{ message.tags }}"{% endif %} style="background-color: #FAF8F5;padding: 10px;font-size: 15px;color: rgb(48, 197, 48);border-radius: 10px;">{{ message }}</p></li>
+                {% if messages %}
+                    <ul style="padding: 0;">
+                        {% for message in messages %}
+                        {% if message.tags == "error" %}
+                            <li style="list-style: none;"><p {% if message.tags %} class="{{ message.tags }}"{% endif %} style="background-color: #FAF8F5;padding: 10px;font-size: 15px;color: rgb(255, 0, 0);border-radius: 10px;">{{ message }}</p></li>
+                        {% else %}
+                            <li style="list-style: none;"><p {% if message.tags %} class="{{ message.tags }}"{% endif %} style="background-color: #FAF8F5;padding: 10px;font-size: 15px;color: rgb(48, 197, 48);border-radius: 10px;">{{ message }}</p></li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
                 {% endif %}
-                {% endfor %}
-            </ul>
-            {% endif %}
             </div>
         </div>
 
-                <div class="row">
-
-
-
-
-
-
-
-                    <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
-
-                        <div class="as_shop_topbar">
-
-                            {% comment %} <span class="as_result_text">Showing 1–9 of 15 results</span> {% endcomment %}
-
-                            {% comment %} <div class="as_select_box">
-
-                                <select class="form-control" data-placeholder="Default Shorting">
-
-                                    <option value="male">By Name</option>
-
-                                    <option value="female">By Price</option>
-
-                                </select>
-
-                            </div>  {% endcomment %}
-
-                        </div>
-
-                        <div class="row">
-
-
-
-                            <table style="border-collapse: collapse;width: 130%;">
-
-                                <tr >
-
-                                    <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Product Image</th>
-
-                                    <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Product</th>
-
-                                    <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Price</th>
-
-                                    <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Remove</th>
-
-                                </tr>
-
-                                {% for prod, l in mylist %}
-
-                                <tr>
-
-                                    <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;"><img src="/media/{{ prod.product.prodpicture }}" alt="" width="200px" style="max-height: 70px;" class="img-responsive w-auto"></td>
-
-                                    <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;"><a href="{% url 'viewprod' id=prod.id %}">{{ prod.product.prodname}}</a></td>
-
-                                    <!--<td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">₹ {{ prod.product.price }} x {{ prod.quantity }} = {{ l }}</td>-->
-
-                                    <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">₹ {{ prod.product.offerprice }} x {{ prod.quantity }} = {{ l }}</td>
-
-                                    <!--<td><a href="{% url 'delcart' id=prod.id %}"> <button class="btn btn-danger">X</button></td>-->
-
-                                    <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">
-
-                                    <input type="checkbox" id="confirmation-checkbox">
-
-                                      <label for="confirmation-checkbox"><span class="btn btn-danger" style="border-radius:50%;" >X</span></label>
-
-                                      <div id="confirmation-message">
-
-                                        <p>Are you sure you want to Delete?</p>
-
-                                        <a  href="{% url 'delcart' id=prod.id %}"><button class="btn btn-info">Yes</button></a>
-
-                                        <button id="cancel-button" class="btn btn-danger">No</button>
-
-                                      </div>
-
-                                      </td>
-
-                                </tr>
-
-                                {% endfor %}
-
-                                <tr class="bg-light">
-                                    <th colspan="2" class="text-right valign-middle pr-2">
-                                        Total Amount:
-                                    </th>
-                                    <th class="valign-middle text-left h2"><span id="total">₹ {{tot}}</span></th>
-                                    <th class="py-3">
-                                        <a href="/addresstoorder/"><button class="as_btn">Go to Pay</button></a>
-                                    </th>
-                                </tr>
-
-                             </table>
-
-
-
-
-
-                            {% comment %} {% for prod in cartprod %}
-
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-
-                                <div class="as_product_box">
-
-                                    <div class="as_product_img">
-
-                                        <img src="/media/{{ prod.product.prodpicture }}" alt="" class="img-responsive">
-
-
-
-
-
-
-
-
-
-                                    </div>
-
-                                    <div class="as_product_detail">
-
-                                        <h4 class="as_subheading">{{ prod.product.prodname }}</h4>
-
-                                        <span class="as_price">₹ {{ prod.product.price }} <span class="as_orange"></span></span>
-
-                                        {% comment %} <a href="{% url 'proddetail' id=prod.product.id %}" class="as_btn">Checkout</a> {% endcomment %}
-
-                                    {% comment %} </div>
-
-                                </div>
-
-                            </div>
-
-                            {% endfor %} {% endcomment %}
-
-
-
-
-
-
-
-                        </div>
-
-
-
-
-
-
-
-
-
-                    <!-- <div class="container">
-
-
-
-                        <div class="productcont">
-
-
-
-                                </div>
-
-                                <div class="cart-container">
-
-
-
-
-
-
-
-                                <table id="carttotals" width="137%">
-
-
-
-                                    <tr>
-                                        <td style="color:#ffffff;"><strong>Slot Date & Time</strong></td>
-                                        <td><strong>Total Amount</strong></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td style="color:#ffffff;"><span id="itemsquantity"></span></td>
-                                        <td style="font-size:20px;">₹<span id="total">{{tot}}</span></td>
-                                    </tr>
-
-
-
-
-
-                                    <!--<tr>->
-
-                                    <!--{% comment %} <td><strong>Items</strong></td> {% endcomment %}-->
-
-                                    <!--<td><strong  style="font-size:20px;text-align:left">Total</strong></td>-->
-
-                                    <!--</tr>-->
-
-                                    <!--<tr>-->
-
-                                    <!--{% comment %} <td>x <span id="itemsquantity">{{item}}</span></td> {% endcomment %}-->
-
-
-
-                                    <!--<td style="font-size:20px;">₹<span id="total">{{tot}}</span></td>-->
-
-                                    <!--</tr>->
-
-                                    </table>
-
-
-
-                                    <br></br>
-
-                                <div class="cart-buttons">
-
-                                    {% comment %} <button class="as_btn">Empty Cart</button>
-
-                                    {% comment %} <button class="as_btn"><a href="/checkout/" class="as_btn">Checkout</a></button> {% endcomment %}
-
-                                    {% comment %} {% url 'proddetail' id=prod.product.id %} {% endcomment %}
-
-
-
-                                    <!--<button class="as_btn" id="rzp-button1">Pay with Razorpay</button>->
-
-                                    <a href="/addresstoorder/"><button class="as_btn">Go to Pay</button></a>
-
-                                </div>
-
-                                </div>
-
-                        </div>
-
-
-
-                    </div> -->
-
+        <div class="row">
+            <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
+                <div class="as_shop_topbar">
+                    {% comment %} <span class="as_result_text">Showing 1–9 of 15 results</span> {% endcomment %}
+                    {% comment %} <div class="as_select_box">
+                    <select class="form-control" data-placeholder="Default Shorting">
+                        <option value="male">By Name</option>
+                        <option value="female">By Price</option>
+                    </select>
+                    </div>
+                    {% endcomment %}
                 </div>
 
+                <div class="row">
+                    <table style="border-collapse: collapse;width: 130%;">
+                        <tr >
+                            <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Product Image</th>
+                            <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Product</th>
+                            <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Price</th>
+                            <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Quantity</th>
+                            <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Subtotal</th>
+                            <th style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;font-weight:bold;">Remove</th>
+                        </tr>
+                        {% for prod, l in mylist %}
+                        <tr>
+                            <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;"><img src="/media/{{ prod.product.prodpicture }}" alt="" width="200px" style="max-height: 70px;" class="img-responsive w-auto"></td>
+                            <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;"><a href="{% url 'viewprod' id=prod.id %}">{{ prod.product.prodname}}</a></td>
+<!--                            <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">₹ {{ prod.product.price }} x {{ prod.quantity }} = {{ l }}</td>-->
+<!--                            <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">₹ {{ prod.product.offerprice }} x {{ prod.quantity }} = {{ l }}</td>-->
+                            <td id="price_{{ prod.product.id }}" class="price" style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">₹ {{ prod.product.offerprice }}</td>
+                            <td>
+                                <button id="minus_{{ prod.product.id }}" class="qtyminus" aria-hidden="true" style="border-style:none" onclick="changeQuantity('{{ prod.product.id }}', 'minus')">&minus;</button>
+                                <input type="number" id="qty_{{ prod.product.id }}" class="quantity-input" value="{{ prod.quantity }}" min="1" max="{{ prod.product.quantity }}" step="1" style="border-style:none" onclick="changeQuantity('{{ prod.product.id }}')" readonly>
+                                <button id="plus_{{ prod.product.id }}" class="qtyplus" aria-hidden="true"  style="border-style:none" onclick="changeQuantity('{{ prod.product.id }}', 'plus')">&plus;</button>
+                            </td>
+                            <td id="total_price_{{ prod.product.id }}" class="total-price" style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">₹ {{ l }}</td>
+                            <!--<td><a href="{% url 'delcart' id=prod.id %}"> <button class="btn btn-danger">X</button></td>-->
+                            <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">
+                                <input type="checkbox" id="confirmation-checkbox">
+                                <label for="confirmation-checkbox"><span class="btn btn-danger" style="border-radius:50%;" >X</span></label>
+                                <div id="confirmation-message">
+                                    <p>Are you sure you want to Delete?</p>
+                                    <a  href="{% url 'delcart' id=prod.id %}"><button class="btn btn-info">Yes</button></a>
+                                    <button id="cancel-button" class="btn btn-danger">No</button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr class="bg-light">
+                            <th></th>
+                            <th colspan="2" class="text-right valign-middle pr-2">
+                                Total Amount:
+                            </th>
+                            <th class="valign-middle text-left h2"><span id="total">₹ {{tot}}</span></th>
+                            <th class="py-3">
+                                <a><button id="goToPayBtn" class="as_btn">Go to Pay</button></a>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </table>
+
+                    {% comment %} {% for prod in cartprod %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="as_product_box">
+                            <div class="as_product_img">
+                                <img src="/media/{{ prod.product.prodpicture }}" alt="" class="img-responsive">
+                            </div>
+                            <div class="as_product_detail">
+                                <h4 class="as_subheading">{{ prod.product.prodname }}</h4>
+                                <span class="as_price">₹ {{ prod.product.price }} <span class="as_orange"></span></span>
+                                {% comment %} <a href="{% url 'proddetail' id=prod.product.id %}" class="as_btn">Checkout</a> {% endcomment %}
+                            {% comment %} </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endcomment %}
+
+                </div>
             </div>
+        </div>
+    </div>
+</section>
+<!--    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>-->
+<!--    <script>-->
+<!--        var options = {-->
+<!--            "key": "rzp_test_5zi3oIF0JLuyX2", // Enter the Key ID generated from the Dashboard-->
+<!--            "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise-->
+<!--            "currency": "INR",-->
+<!--            "name": "Ask2Astro",-->
+<!--            "description": "Purchase",-->
+<!--            "image": "https://example.com/your_logo",-->
+<!--            "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1-->
+<!--            "handler": function (response){-->
+<!--                alert(response.razorpay_payment_id);-->
+<!--                alert(response.razorpay_order_id);-->
+<!--                alert(response.razorpay_signature)-->
+<!--            },-->
+<!--            "theme": {-->
+<!--                "color": "#3399cc"-->
+<!--            }-->
+<!--        };-->
+<!--        var rzp1 = new Razorpay(options);-->
+<!--        rzp1.on('payment.failed', function (response){-->
+<!--                alert(response.error.code);-->
+<!--                alert(response.error.description);-->
+<!--                alert(response.error.source);-->
+<!--                alert(response.error.step);-->
+<!--                alert(response.error.reason);-->
+<!--                alert(response.error.metadata.order_id);-->
+<!--                alert(response.error.metadata.payment_id);-->
+<!--        });-->
+<!--        document.getElementById('rzp-button1').onclick = function(e){-->
+<!--            rzp1.open();-->
+<!--            e.preventDefault();-->
+<!--        }-->
+<!--        </script>-->
+<script>
+    function changeQuantity(productId, btnType) {
+        var input = document.getElementById('qty_' + productId);
+        var btnminus = document.getElementById('minus_' + productId);
+        var btnplus = document.getElementById('plus_' + productId);
+        var totalprice = document.getElementById('total_price_' + productId);
 
-        </section>
+        if (input !== undefined && btnminus !== undefined && btnplus !== undefined && input !== null && btnminus !== null && btnplus !== null) {
 
+            var min = Number(input.getAttribute('min'));
+            var max = Number(input.getAttribute('max'));
+            var step = Number(input.getAttribute('step'));
 
-
-
-
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-
-
-    <script>
-
-        var options = {
-
-            "key": "rzp_test_5zi3oIF0JLuyX2", // Enter the Key ID generated from the Dashboard
-
-            "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-
-            "currency": "INR",
-
-            "name": "Ask2Astro",
-
-            "description": "Purchase",
-
-            "image": "https://example.com/your_logo",
-
-            "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-
-            "handler": function (response){
-
-                alert(response.razorpay_payment_id);
-
-                alert(response.razorpay_order_id);
-
-                alert(response.razorpay_signature)
-
-            },
-
-
-
-            "theme": {
-
-                "color": "#3399cc"
-
+            function updateCart() {
+                // Get the updated quantity, amount, and total amount
+                var data = {
+                    quantity: input.value,
+                    product_id: productId
+                };
+                fetch('/updatecart/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // 'X-CSRFToken': csrftoken  // Include the CSRF token in the headers
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Handle the response from the server
+                        console.log('Data sent successfully');
+                        // Redirect or perform any other action as needed
+                    } else {
+                        console.error('Failed to send data');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
             }
 
-        };
+            function updateTotalAmount() {
+                var totalAmount = 0;
+                document.querySelectorAll('.total-price').forEach(function (cell) {
+                    totalAmount += parseFloat(cell.textContent.replace('₹', '').trim());
+                });
+                document.getElementById('total').textContent = '₹ ' + totalAmount.toFixed(2);
+            }
 
-        var rzp1 = new Razorpay(options);
+            function qtyminus() {
+                var current = Number(input.value);
+                var newval = (current - step);
+                if (newval < min) {
+                    newval = min;
+                } else if (newval > max) {
+                    newval = max;
+                }
+                input.value = Number(newval);
+                var price = parseFloat(document.getElementById('price_' + productId).textContent.replace('₹', '').trim());
+                // Calculate new total price
+                var totalPrice = newval * price;
+                // Update total price in the corresponding cell
+                totalprice.textContent = '₹ ' + totalPrice.toFixed(2);
+            }
 
-        rzp1.on('payment.failed', function (response){
+            function qtyplus() {
+                var current = Number(input.value);
+                var newval = (current + step);
+                if (newval > max) newval = max;
+                input.value = Number(newval);
+                var price = parseFloat(document.getElementById('price_' + productId).textContent.replace('₹', '').trim());
+                // Calculate new total price
+                var totalPrice = newval * price;
+                // Update total price in the corresponding cell
+                totalprice.textContent = '₹ ' + totalPrice.toFixed(2);
+            }
 
-                alert(response.error.code);
-
-                alert(response.error.description);
-
-                alert(response.error.source);
-
-                alert(response.error.step);
-
-                alert(response.error.reason);
-
-                alert(response.error.metadata.order_id);
-
-                alert(response.error.metadata.payment_id);
-
-        });
-
-        document.getElementById('rzp-button1').onclick = function(e){
-
-            rzp1.open();
-
-            e.preventDefault();
-
+            if (btnType === 'minus') {
+                qtyminus();
+                updateTotalAmount();
+                updateCart();
+            }
+            else if (btnType === 'plus') {
+                qtyplus();
+                updateTotalAmount();
+                updateCart();
+            }
         }
-
-        </script>
-
-
-
-        <script>
-
-    var cancelButton = document.getElementById('cancel-button');
-
-    cancelButton.addEventListener('click', function() {
-
-  var confirmationCheckbox = document.getElementById('confirmation-checkbox');
-
-  confirmationCheckbox.checked = false;
-
-});
-
+    }
 </script>
-
-    {% endblock content %}
+<script>
+    var cancelButton = document.getElementById('cancel-button');
+    cancelButton.addEventListener('click', function() {
+        var confirmationCheckbox = document.getElementById('confirmation-checkbox');
+        confirmationCheckbox.checked = false;
+    });
+</script>
+{% endblock content %}

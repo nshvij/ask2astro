@@ -1,7 +1,9 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.hashers import make_password
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from accounts.models import *
 from django.contrib import messages
@@ -165,11 +167,11 @@ def BuyOrderSuccessView(request):
     res = response.json()
     if res['data']['state'] == 'COMPLETED' and transaction_id == res['data']['merchantTransactionId']:
         user = request.user.id
-        prod = Products.objects.filter(prodname=product_name).first()
+        prod = Products.objects.filter(prodname=product_name)
         pi = []
         qt = 0
         for i in prod:
-            i = pi.append(i.product.prodname)
+            i = pi.append(i.prodname)
         for i in prod:
             qt += int(i.quantity)
 
@@ -1033,7 +1035,23 @@ from web_astrology import settings
 #         return render(request, "showcart.html", {'cartprod':prod, 'item':count_cart, 'totalamt':c, 'mylist':mylist,'tot':tot})
 #     except:
 #         return render(request, 'showcart.html')
-        
+
+@csrf_exempt
+def UpdateCartProduct(request):
+    if request.method == 'POST':
+        user = User.objects.get(id=request.user.id)
+        data = json.loads(request.body)
+        # Access the values
+        quantity = data.get('quantity')
+        product_id = data.get('product_id')
+        prod = Cart.objects.filter(user_id=user.id, product=product_id).first()
+        if not prod:
+            return JsonResponse({'message': 'Data Not Found!'}, status=404)
+        prod.quantity = quantity
+        prod.save()
+        return JsonResponse({'message': 'Cart updated successfully'})
+
+
 def ViewCartProduct(request):
     try:
         current_user = User.objects.get(username=request.user)
@@ -1136,7 +1154,7 @@ def OrderPlaceAddres(request):
 
         uplead.update(currentaddress=addre,mobileno=mobileno,
                       houseno=houseno,area=area,landmark=landmark,pincode=pincode,
-                      towncity=towncity)
+                      towncity=towncity, state=state)
         # orderobj.save()
         if item_name and prod:
             caloffer = (float(prod.price) * float(prod.offers)) / 100
@@ -1146,7 +1164,7 @@ def OrderPlaceAddres(request):
             prod.save()
             context = {"id":prod.id, "prodname": prod.prodname, 'price': cal*int(item_quantity)}
             request.session['context'] = context
-            return redirect('/buy/')
+            return redirect('/buy_checkout/')
         return redirect('/checkout/')
 
     else:
@@ -1205,8 +1223,8 @@ def BuyNow(request):
     phonepe_client = PhonePePaymentClient(merchant_id=settings.merchant_id, salt_key=settings.salt_key,
                                           salt_index=settings.salt_index, env=settings.env)
     unique_transaction_id = str(uuid.uuid4())
-    ui_redirect_url = settings.redirect_base_url + reverse("buy_order_success") + f'?transaction_id={unique_transaction_id}&amount={int(prod_price)}&_from={prod_name}'
-    s2s_callback_url = settings.redirect_base_url + reverse("buy_order_success") + f'?transaction_id={unique_transaction_id}&amount={int(prod_price)}&_from={prod_name}'
+    ui_redirect_url = settings.redirect_base_url + reverse("buy_now_success") + f'?transaction_id={unique_transaction_id}&amount={int(prod_price)}&_from={prod_name}'
+    s2s_callback_url = settings.redirect_base_url + reverse("buy_now_success") + f'?transaction_id={unique_transaction_id}&amount={int(prod_price)}&_from={prod_name}'
     amount = int(prod_price) * 100
     id_assigned_to_user_by_merchant = user.id
     pay_request = PgPayRequest.pay_page_pay_request_builder(merchant_transaction_id=unique_transaction_id,
@@ -1229,7 +1247,7 @@ def BuyNow(request):
 
     current_user = User.objects.get(username=request.user)
     count_cart = Cart.objects.filter(user_id=current_user.id).count()
-    return render(request, "checkout.html",{'cb': float(cb), 'tot': float(prod_price), 'item': count_cart, 'payment_url': pay_page_url, 'cart': countcart, 'pooja': count_puja})
+    return render(request, "buynow_checkout.html",{'cb': float(cb), 'tot': float(prod_price), 'item': count_cart, 'payment_url': pay_page_url, 'cart': countcart, 'pooja': count_puja})
 
 
 def Checkout(request):
@@ -1338,7 +1356,7 @@ def Checkout(request):
     count_cart = Cart.objects.filter(user_id=current_user.id).count()
     return render(request, "checkout.html",
                   {'cb':float(cb),'tot':float(tot),'cartprod':prod, 'item':count_cart, 'totalamt':c,
-                   'payment_url':pay_page_url, 'mylist':mylist,'tot':tot,'cart':countcart,'pooja':count_puja})
+                   'payment_url':pay_page_url, 'mylist':mylist,'cart':countcart,'pooja':count_puja})
     # return render(request, "checkout.html")
     # else:
     #     return render(request, "incufficient.html")
@@ -2087,6 +2105,7 @@ def PaymentByRazorpay(request):
 #     return render(request, "walletamount.html")
     
 def PayWithWallet(request):
+    direct_checkout = request.GET.get('direct_checkout', None)
     current_user = User.objects.get(username=request.user)
     count_cart = Cart.objects.filter(user_id=current_user.id).count()
     count_puja = PujaSlotBooking.objects.filter(user_id=current_user.id).count()
@@ -2104,33 +2123,57 @@ def PayWithWallet(request):
     print(user)
     # addr = OrderPlaceAddress.objects.filter(userid=user)
     # print("dsfsfsfsd",addr)
-    prod = Cart.objects.filter(user_id=user.id).order_by('id').reverse()
-    print(prod)
-    pi = []
-    for i in prod:
-        i= pi.append(i.product.prodname)
-    print("My Product", pi) 
-    c = 0
-    for i in prod:
-        c = c + float(i.product.offerprice)
- 
-    
-    ls = []
-    tot = 0
-    for pro in prod:
-        print('Thisssssss',type(pro.product.offerprice))
-        amt = float(pro.product.offerprice)
-        qty = int(pro.quantity)
-        print("wedfefefefef feff",type(amt))
-        # pro = ls.append(amt)
-        # qty = ls.append(qty)
-        total = amt*qty
-        ls.append(total)
-        tot = sum(ls)
-        
-        print(tot)
-        
-        mylist = zip(prod, ls)
+    if bool(direct_checkout):
+        print("IN")
+        context = request.session['context']
+        prod_id = context['id'] or None
+        prod_price = float(context['price']) or None
+        prod = Products.objects.filter(id=int(prod_id))
+        pi = []
+        for i in prod:
+            i = pi.append(i.prodname)
+        c = 0
+        for i in prod:
+            c = c + float(i.offerprice)
+
+        ls = []
+        tot = 0
+        for pro in prod:
+            amt = float(pro.offerprice)
+            # qty = int(pro.quantity)
+            total = prod_price
+            ls.append(total)
+            tot = sum(ls)
+            mylist = zip(prod, ls)
+    else:
+        print("ELSE")
+        prod = Cart.objects.filter(user_id=user.id).order_by('id').reverse()
+        print(prod)
+        pi = []
+        for i in prod:
+            i= pi.append(i.product.prodname)
+        print("My Product", pi)
+        c = 0
+        for i in prod:
+            c = c + float(i.product.offerprice)
+
+
+        ls = []
+        tot = 0
+        for pro in prod:
+            print('Thisssssss',type(pro.product.offerprice))
+            amt = float(pro.product.offerprice)
+            qty = int(pro.quantity)
+            print("wedfefefefef feff",type(amt))
+            # pro = ls.append(amt)
+            # qty = ls.append(qty)
+            total = amt*qty
+            ls.append(total)
+            tot = sum(ls)
+
+            print(tot)
+
+            mylist = zip(prod, ls)
     
 
     prodid = pi
