@@ -318,7 +318,7 @@
 
                                                 <li><a href="service.html">service</a></li>
 
-                                                <li><a href="/services/">service single</a></li>
+                                                <li><a href="/puja/">service single</a></li>
 
                                                 <li><a href="appointments.html">appointment</a></li>
 
@@ -330,11 +330,11 @@
 
                                         </li> {% endcomment %}
 
-                                        <li><a href="/askquestion/">Ask Astro</a></li>
+                                        <li><a href="/service/ask-a-question/">Ask Astro</a></li>
 
                                         <li><a href="/products/" >shop</a></li>
 
-                                        <li><a href="/services/">Puja</a></li>
+                                        <li><a href="/puja/">Puja</a></li>
 
                                         {% if user.is_authenticated %}
 
@@ -342,15 +342,15 @@
 
                                             <ul class="as_submenu">
 
-                                                <li><a href="/faqreply/">My Questions</a></li>
+                                                <li><a href="/service/questions/reply/">My Questions</a></li>
 
-                                                <li><a href="/prodorder/">My Order</a></li>
+                                                <li><a href="/product/order/history/">My Order</a></li>
 
-                                                <li><a href="/pujaorder/">My Puja</a></li>
+                                                <li><a href="/puja/order/history/">My Puja</a></li>
 
-                                                <li><a href="/faqpay/">My Payments</a></li>
+                                                <li><a href="/service/ask-a-question/payment/history/">My Payments</a></li>
 
-                                                <li><a href="/customersupport/">Customer Support</a></li>
+                                                <li><a href="/customer-support/">Customer Support</a></li>
 
                                             </ul>
 
@@ -420,7 +420,7 @@
 
                                 <div class="as_cart_wrapper">
 
-                                    <span><img src="{% static 'assets/images/svg/cart.svg' %}" alt=""><a href="/showcart/"><span class="as_cartnumber">{{ cart }}</span></a></span>
+                                    <span><img src="{% static 'assets/images/svg/cart.svg' %}" alt=""><a href="/view-cart/"><span class="as_cartnumber">{{ cart }}</span></a></span>
 
                                 </div>
 
@@ -434,7 +434,7 @@
 
                                 <div class="as_cart_wrapper">
 
-                                    <a href="/addwallet/"><span><img src="{% static 'assets/images/svg/wallet-16.png' %}" width='15px' height='15px' alt=""></span></a>
+                                    <a href="/add-to-wallet/"><span><img src="{% static 'assets/images/svg/wallet-16.png' %}" width='15px' height='15px' alt=""></span></a>
 
                                 </div>
 
@@ -448,7 +448,7 @@
 
                                 <div class="as_cart_wrapper">
 
-                                    <span><img src="{% static 'assets/images/svg/5084638.png' %}" alt="" width="18px" height="18px">&nbsp;&nbsp;<a href="/pujaslot/"><span class="as_cartnumber">{{ pooja }}</span></a></span>
+                                    <span><img src="{% static 'assets/images/svg/5084638.png' %}" alt="" width="18px" height="18px">&nbsp;&nbsp;<a href="/puja-slot/"><span class="as_cartnumber">{{ pooja }}</span></a></span>
 
                                 </div>
 
@@ -506,7 +506,7 @@
 
                                 <p>The starts hold the keys to your destiny! Don't miss the chance to ask your astrology questions and pave the way for a more fulfilling life.</p>
 
-                                <a href="/askquestion/" class="as_btn">Ask Anything</a>
+                                <a href="/service/ask-a-question/" class="as_btn">Ask Anything</a>
 
                             </div>
 
@@ -518,7 +518,7 @@
 
                                 <p>Explore the cosmic map of your life! Share your astrological questions, and we will help you decode the celestial messages for a brighter tomorrow.</p>
 
-                                <a href="/askquestion/" class="as_btn">Ask The Expert</a>
+                                <a href="/service/ask-a-question/" class="as_btn">Ask The Expert</a>
 
                             </div>
 
@@ -530,7 +530,7 @@
 
                                 <p>Curious about your love life? career, or personal growth? Don't hesitate! Pose your astrology questions and find the guidance you seek.</p>
 
-                                <a href="/askquestion/" class="as_btn">Ask Away</a>
+                                <a href="/service/ask-a-question/" class="as_btn">Ask Away</a>
 
                             </div>
 
@@ -774,7 +774,7 @@
 
                                     <p class="as_paddingBottom10">Through traditional rituals, <br>Puja strengthens life's miracles.</p>
 
-                                    <a href="/services/" class="as_link">read more 
+                                    <a href="/puja/" class="as_link">read more
 
                                         <span>
 
@@ -864,7 +864,7 @@
 
                                     <p class="as_paddingBottom10">Unlock the secrets of your<br>destiny - ask your questions</p>
 
-                                    <a href="/faqreply/" class="as_link">read more 
+                                    <a href="/service/questions/reply/" class="as_link">read more
 
                                         <span>
 
@@ -1380,7 +1380,7 @@
 
                                         </ul> {% endcomment %}
 
-                                        <h4 class="as_subheading"><a href="/allblogs/"> {{ i.blogtitle }}</a></h4>
+                                        <h4 class="as_subheading"><a href="/blogs/"> {{ i.blogtitle }}</a></h4>
 
                                         <p class="as_font14 as_margin0">{{ i.discription|safe|truncatewords:"50"|linebreaks }}</p>
 
@@ -1400,7 +1400,7 @@
 
                         <div class="text-center as_padderTop60">
 
-                            <a href="/allblogs/" class="as_btn">view more</a>
+                            <a href="/blogs/" class="as_btn">view more</a>
 
                         </div>
 
@@ -1506,15 +1506,15 @@
 
                                     <ul>
 
-                                        <li><a href="/contact/">Contact Us</a></li>
+                                        <li><a href="/contact-us/">Contact Us</a></li>
 
-                                        <li><a href="/privacypolicy/">Privacy Policy</a></li>
+                                        <li><a href="/privacy-policy/">Privacy Policy</a></li>
 
-                                        <li><a href="/termsandcondition/">Terms & Conditions</a></li>
+                                        <li><a href="/terms-and-condition/">Terms & Conditions</a></li>
 
-                                        <li><a href="/refundpolicy/">Cancellation and Refund Policy</a></li>
+                                        <li><a href="/refund-policy/">Cancellation and Refund Policy</a></li>
 
-                                        <li><a href="/shippingpolicy/">Shipping and Delivery Policy</a></li>
+                                        <li><a href="/shipping-policy/">Shipping and Delivery Policy</a></li>
 
                                     </ul>
 

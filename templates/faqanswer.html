@@ -92,7 +92,7 @@
                             {% comment %} <button class="as_btn">Send Question</button> {% endcomment %}
                             <hr>
                             <p>
-                                <a href="/askquestion/"><button class="as_btn" id="rzp-button1">Ask question</button></a>
+                                <a href="/service/ask-a-question/"><button class="as_btn" id="rzp-button1">Ask question</button></a>
                             </p>
                             
                         
@@ -104,25 +104,25 @@
                     <ul class="pagination">
                         {% if all_lead.has_previous %}
                       <li class="page-item">
-                        <a class="page-link" href="/faqreply/?page=1" tabindex="-1">First</a>
+                        <a class="page-link" href="/service/questions/reply/?page=1" tabindex="-1">First</a>
                     </li>
                       <li class="page-item">
-                        <a class="page-link" href="/faqreply/?page={{ all_lead.previous_page_number }}" tabindex="-1">Previous</a>
+                        <a class="page-link" href="/service/questions/reply/?page={{ all_lead.previous_page_number }}" tabindex="-1">Previous</a>
                     </li>
                     {% endif %}
                      
                     {% for n in totalPagelist %}
                       <li class="page-item">
-                        <a class="page-link" href="/faqreply/?page={{n}}">{{n}}</a>
+                        <a class="page-link" href="/service/questions/reply/?page={{n}}">{{n}}</a>
                     </li>
                     {% endfor %}
         
                     {% if all_lead.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="/faqreply/?page={{ lastpage }}">Last</a>
+                        <a class="page-link" href="/service/questions/reply/?page={{ lastpage }}">Last</a>
                     </li>
                       <li class="page-item">
-                        <a class="page-link" href="/faqreply/?page={{ all_lead.next_page_number }}">Next</a>
+                        <a class="page-link" href="/service/questions/reply/?page={{ all_lead.next_page_number }}">Next</a>
                     </li>
                     {% endif %}
                     </ul>

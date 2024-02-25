@@ -80,25 +80,25 @@
                             <ul class="pagination">
                                 {% if all_lead.has_previous %}
                               <li class="page-item">
-                                <a class="page-link" href="/prodorder/?page=1" tabindex="-1">First</a>
+                                <a class="page-link" href="/product/order/history/?page=1" tabindex="-1">First</a>
                             </li>
                               <li class="page-item">
-                                <a class="page-link" href="/prodorder/?page={{ all_lead.previous_page_number }}" tabindex="-1">Previous</a>
+                                <a class="page-link" href="/product/order/history/?page={{ all_lead.previous_page_number }}" tabindex="-1">Previous</a>
                             </li>
                             {% endif %}
                              
                             {% for n in totalPagelist %}
                               <li class="page-item">
-                                <a class="page-link" href="/prodorder/?page={{n}}">{{n}}</a>
+                                <a class="page-link" href="/product/order/history/?page={{n}}">{{n}}</a>
                             </li>
                             {% endfor %}
                 
                             {% if all_lead.has_next %}
                             <li class="page-item">
-                                <a class="page-link" href="/prodorder/?page={{ lastpage }}">Last</a>
+                                <a class="page-link" href="/product/order/history/?page={{ lastpage }}">Last</a>
                             </li>
                               <li class="page-item">
-                                <a class="page-link" href="/prodorder/?page={{ all_lead.next_page_number }}">Next</a>
+                                <a class="page-link" href="/product/order/history/?page={{ all_lead.next_page_number }}">Next</a>
                             </li>
                             {% endif %}
                             </ul>

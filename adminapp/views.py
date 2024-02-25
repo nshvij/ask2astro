@@ -1232,7 +1232,7 @@ def AddWalletAmount(request):
             var1.save()
         
         messages.success(request, "Add wallet amount successfull..")
-        return redirect('/paymentadmin/')
+        return redirect('/confirm-payment/')
     return render(request, "walletamount.html", {'amount':prod, 'amt':chg})
 
 
@@ -1308,7 +1308,7 @@ def PaymentByRazorpay(request):
     orderobj.save()
 
     messages.success(request, 'Pay successfully.')
-    # return redirect('/askquestion/'))
+    # return redirect('/service/ask-a-question/'))
     return render(request, "walletcash.html", {'payment_url':pay_page_url})
 
 

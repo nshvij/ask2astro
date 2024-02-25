@@ -88,7 +88,7 @@
                             </th>
                             <th class="valign-middle text-left h2"><span id="total">₹ {{tot}}</span></th>
                             <th class="py-3">
-                                <a><button id="goToPayBtn" class="as_btn">Go to Pay</button></a>
+                                <a href="/delivery-address/"><button class="as_btn">Go to Pay</button></a>
                             </th>
                             <th></th>
                         </tr>
@@ -168,7 +168,7 @@
                     quantity: input.value,
                     product_id: productId
                 };
-                fetch('/updatecart/', {
+                fetch('/update-cart/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

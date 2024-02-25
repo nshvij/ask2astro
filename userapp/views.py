@@ -777,7 +777,7 @@ def AddPoojaSlot(request, id):
             # (request, "Puja slot already booked")
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
     except User.DoesNotExist:
-        return redirect(f'/login/?next=/pujadetail/{id}/')
+        return redirect(f'/login/?next=/puja-detail/{id}/')
     # else:
     #     user=request.user
     #     slot = request.POST['pujaslt']
@@ -945,7 +945,7 @@ def AddToCart(request, id):
             messages.success(request, "Something went wrong!")
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
     except User.DoesNotExist:
-             return redirect(f'/login/?next=/proddetail/{id}/')
+             return redirect(f'/login/?next=/product-detail/{id}/')
         # messages.success(request, "Cart already created!!!")
         # return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
         
@@ -963,7 +963,7 @@ def ViewProductdescription(request, id):
         uplead.update(quantity=qty)
         messages.success(request, f"Updated Successfully")
         # return redirect('/superadmin/edit_leadinfo//')
-        return redirect('/showcart/') 
+        return redirect('/view-cart/')
     else:
         detailprod = Cart.objects.get(id=id)
         print("YYUUHJJJJ HHJKJK",detailprod.product.price)
@@ -1137,7 +1137,7 @@ def OrderPlaceAddres(request):
     count_puja = PujaSlotBooking.objects.filter(user_id=current_user.id).count()
     if not countcart and not item_name:
         messages.error(request, 'Cart is Empty.')
-        return redirect('/showcart/')
+        return redirect('/view-cart/')
 
     if request.method == 'POST':
         addre = request.POST['address']
@@ -1164,8 +1164,8 @@ def OrderPlaceAddres(request):
             prod.save()
             context = {"id":prod.id, "prodname": prod.prodname, 'price': cal*int(item_quantity)}
             request.session['context'] = context
-            return redirect('/buy_checkout/')
-        return redirect('/checkout/')
+            return redirect('/product/checkout/')
+        return redirect('/cart/checkout/')
 
     else:
         usr  = request.user.id
@@ -1388,11 +1388,11 @@ def QusAndAnswerView(request):
             # user_obj.save()
             
             #(request, 'Pay here to get answer successfully.')
-            return redirect(f'/askquestionpay/?category_id={catname}&answer_time={timing}&friend={username}&question={qus}')
+            return redirect(f'/service/ask-a-question/checkout/?category_id={catname}&answer_time={timing}&friend={username}&question={qus}')
         else:
             return render(request, "askquestion.html", {'cate':quscat, 'anstime':time, 'relation':profiles,'cart':count_cart,'pooja':count_puja})
     except User.DoesNotExist:
-             return redirect(f'/login/?next=/askquestion/')
+             return redirect(f'/login/?next=/service/ask-a-question/')
             
             
     
@@ -1491,7 +1491,7 @@ def QusAndAnswerViewPayment(request):
     # prod.update(is_paid=True)
 
 
-    # return redirect('/askquestion/')
+    # return redirect('/service/ask-a-question/')
     
     return render(request, "checkoutforqa.html", {'cb':float(cb),'tot':float(c),'cate':quscat, 'anstime':time, 'relation':profiles,'cart':count_cart,'pooja':count_puja, 'payment_url':pay_page_url,'qustion':question,'amount':amount})
 # else:
@@ -1532,7 +1532,7 @@ def ShowFAQReply(request):
         }
         return render(request, "faqanswer.html", context)
     except User.DoesNotExist:
-             return redirect(f'/login/?next=/faqreply/')
+             return redirect(f'/login/?next=/service/questions/reply/')
 
 def ShowOrderlist(request):   
     try:
@@ -1558,7 +1558,7 @@ def ShowOrderlist(request):
         }
         return render(request, "userproductorder.html", context)
     except User.DoesNotExist:
-             return redirect(f'/login/?next=/prodorder/')
+             return redirect(f'/login/?next=/product/order/history/')
 
 
 def ShowPojaSlot(request):
@@ -1585,7 +1585,7 @@ def ShowPojaSlot(request):
         }
         return render(request, "userpujaorder.html", context)
     except User.DoesNotExist:
-             return redirect(f'/login/?next=/pujaorder/')
+             return redirect(f'/login/?next=/puja/order/history/')
     
 
 def ShowFaqPayment(request):
@@ -1612,7 +1612,7 @@ def ShowFaqPayment(request):
         }
         return render(request, "useruespayment.html", context)
     except User.DoesNotExist:
-             return redirect(f'/login/?next=/faqpay/')
+             return redirect(f'/login/?next=/service/ask-a-question/payment/history/')
     
 def UserRegister(request):
     code = CountryCode.objects.all()
@@ -1779,7 +1779,7 @@ def FamilyFriendCreate(request):
                         )
         user_obj.save()
         #(request, 'Profile is create successfully.')
-        return redirect('/getfriendfunction/')
+        return redirect('/view-family-friend/')
          
     else:
         return render(request, "friendsprofile.html", {'relation':relation})
@@ -1824,7 +1824,7 @@ def EditFriendProfileView(request, id):
                         ask_by_id=user
                         )
         messages.success(request, f"{name}, profile updated successfully")
-        return redirect('/getfriendfunction/')
+        return redirect('/view-family-friend/')
         # return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))  
     else:
         getUser = FamilyFriendsprofile.objects.get(id=id)    
@@ -1836,7 +1836,7 @@ def DeleteFriendProfile(request, id):
     data = FamilyFriendsprofile.objects.get(id=id)
     data.delete()
     # messages.success(request, f"{data.product.prodname}, has been deleted succsessfull")
-    return redirect('/getfriendfunction/')
+    return redirect('/view-family-friend/')
 
     
     
@@ -1866,10 +1866,10 @@ def SendCustomerSupport(request):
             user_obj = CustomerSupport(userid_id=user,message=msg)
             user_obj.save()
             #(request, 'Submitted successfully.')
-            return redirect('/customersupport/')
+            return redirect('/customer-support/')
         return render(request, "customersupport.html",{'cart':countcart,'pooja':count_puja})
     except:
-             return redirect(f'/login/?next=/customersupport/')
+             return redirect(f'/login/?next=/customer-support/')
 def HoroscopeView(request):
     # Parse the input string into a datetime object
     input_string = datetime.now()
@@ -1934,14 +1934,14 @@ def DeleteCart(request, id):
     data = Cart.objects.get(id=id)
     data.delete()
     #(request, f"{data.product.prodname}, has been deleted succsessfull")
-    return redirect('/showcart/')
+    return redirect('/view-cart/')
 
 
 def DeletePoja(request, id):
     data = PujaSlotBooking.objects.get(id=id)
     data.delete()
     #(request, f"{data.pooja.name}, has been deleted succsessfull")
-    return redirect('/pujaslot/')
+    return redirect('/puja-slot/')
 
 def AddWalletAmount(request):
     current_user = User.objects.get(username=request.user)
@@ -2012,7 +2012,7 @@ def AddWalletAmount(request):
         #     var1.save()
         #
         # messages.success(request, "Add wallet amount successfull..")
-        return redirect(f'/paymentadmin/?amount={amount}')
+        return redirect(f'/confirm-payment/?amount={amount}')
     return render(request, "walletamount.html", {'amount':prod, 'amt':chg,'cart':count_cart,'pooja':count_puja})
 
 
@@ -2092,7 +2092,7 @@ def PaymentByRazorpay(request):
     # orderobj.save()
 
     # messages.success(request, 'Pay successfully.')
-    # return redirect('/askquestion/'))
+    # return redirect('/service/ask-a-question/'))
     return render(request, "walletcash.html", {'payment_url':pay_page_url,'cart':count_cart,'pooja':count_puja,'amount':amount})
 
 
@@ -2600,11 +2600,11 @@ def SendMailToPassword(request):
                     fail_silently=False,
                 )
             messages.success(request, "Check your email")
-            return redirect('/mailpass/')
+            return redirect('/forgot-password/')
         except User.DoesNotExist:
             # Handle error case where the email is not found
             messages.success(request, "Email id not found.")
-            return redirect('/mailpass/')        
+            return redirect('/forgot-password/')        
    
     return render(request, "changepassform.html")
 

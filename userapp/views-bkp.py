@@ -870,7 +870,7 @@ def OrderPlaceAddres(request):
                           houseno=houseno,area=area,landmark=landmark,pincode=pincode,
                           towncity=towncity)
             # orderobj.save()
-            return redirect('/checkout/')
+            return redirect('/cart/checkout/')
             
         else:
             usr  = request.user.id
@@ -989,7 +989,7 @@ def QusAndAnswerView(request):
             user_obj.save()
             
             #(request, 'Pay here to get answer successfully.')
-            return redirect('/askquestionpay/')
+            return redirect('/service/ask-a-question/checkout/')
         else:
             return render(request, "askquestion.html", {'cate':quscat, 'anstime':time, 'relation':profiles,'cart':count_cart,'pooja':count_puja})
     except User.DoesNotExist:
@@ -1052,7 +1052,7 @@ def QusAndAnswerViewPayment(request):
     prod.update(is_paid=True)
 
 
-    # return redirect('/askquestion/')
+    # return redirect('/service/ask-a-question/')
     
     return render(request, "checkoutforqa.html", {'cb':float(cb),'tot':float(c),'cate':quscat, 'anstime':time, 'relation':profiles,'cart':count_cart,'pooja':count_puja, 'payment':payment,'qustion':qustion,'amount':amount})
 # else:
@@ -1311,7 +1311,7 @@ def FamilyFriendCreate(request):
                         )
         user_obj.save()
         #(request, 'Profile is create successfully.')
-        return redirect('/getfriendfunction/')
+        return redirect('/view-family-friend/')
          
     else:
         return render(request, "friendsprofile.html", {'relation':relation})
@@ -1356,7 +1356,7 @@ def EditFriendProfileView(request, id):
                         ask_by_id=user
                         )
         messages.success(request, f"{name}, profile updated successfully")
-        return redirect('/getfriendfunction/')
+        return redirect('/view-family-friend/')
         # return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))  
     else:
         getUser = FamilyFriendsprofile.objects.get(id=id)    
@@ -1368,7 +1368,7 @@ def DeleteFriendProfile(request, id):
     data = FamilyFriendsprofile.objects.get(id=id)
     data.delete()
     # messages.success(request, f"{data.product.prodname}, has been deleted succsessfull")
-    return redirect('/getfriendfunction/')
+    return redirect('/view-family-friend/')
 
     
     
@@ -1398,7 +1398,7 @@ def SendCustomerSupport(request):
             user_obj = CustomerSupport(userid_id=user,message=msg)
             user_obj.save()
             #(request, 'Submitted successfully.')
-            return redirect('/customersupport/')
+            return redirect('/customer-support/')
         return render(request, "customersupport.html",{'cart':countcart,'pooja':count_puja})
     except:
              return redirect('/login/')
@@ -1545,7 +1545,7 @@ def AddWalletAmount(request):
             var1.save()
         
         messages.success(request, "Add wallet amount successfull..")
-        return redirect('/paymentadmin/')
+        return redirect('/confirm-payment/')
     return render(request, "walletamount.html", {'amount':prod, 'amt':chg,'cart':count_cart,'pooja':count_puja})
 
 
@@ -1592,7 +1592,7 @@ def PaymentByRazorpay(request):
     orderobj.save()
 
     messages.success(request, 'Pay successfully.')
-    # return redirect('/askquestion/'))
+    # return redirect('/service/ask-a-question/'))
     return render(request, "walletcash.html", {'payment':payment,'cart':count_cart,'pooja':count_puja,'amount':amount})
 
 
@@ -2022,11 +2022,11 @@ def SendMailToPassword(request):
                     fail_silently=False,
                 )
             messages.success(request, "Check your email")
-            return redirect('/mailpass/')
+            return redirect('/forgot-password/')
         except User.DoesNotExist:
             # Handle error case where the email is not found
             messages.success(request, "Email id not found.")
-            return redirect('/mailpass/')        
+            return redirect('/forgot-password/')        
    
     return render(request, "changepassform.html")
 

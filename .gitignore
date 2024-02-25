@@ -5,5 +5,3 @@ __pycache__/
 *.dat
 *.dir
 .env
-
-db.sqlite3
