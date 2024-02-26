@@ -688,7 +688,8 @@ def ViewProductDetail(request,id):
         prodquan=int(prod.quantity)
         ob = Products.objects.filter(id=id)
         ob.update(offerprice=cal)
-        return render(request, "productdetail.html", {'detailprod':prod,'cart':count_cart,'pooja':count_puja,'cal':cal, 'prodquan':prodquan})
+        faq = Faq.objects.filter(product=prod)
+        return render(request, "productdetail.html", {'detailprod':prod,'cart':count_cart,'pooja':count_puja,'cal':cal, 'prodquan':prodquan, 'faq_items': faq})
     except User.DoesNotExist:
         prod = Products.objects.get(id=id)
         print(prod)
@@ -697,7 +698,8 @@ def ViewProductDetail(request,id):
         caloffer=(float(prod.price)*float(prod.offers))/100
         cal=float(prod.price)-caloffer
         prodquan=int(prod.quantity)
-        return render(request, "productdetail.html", {'detailprod':prod,'cal':cal, 'prodquan':prodquan})
+        faq = Faq.objects.filter(product=prod)
+        return render(request, "productdetail.html", {'detailprod':prod,'cal':cal, 'prodquan':prodquan, 'faq_items': faq})
 
 
 # def ViewPujaDetail(request, id):
@@ -724,12 +726,14 @@ def ViewPujaDetail(request, id):
         slottime = PoojaSlot.objects.all()
         ob = Pooja.objects.filter(id=id)
         ob.update(offerprice=cal)
-        return render(request, "pujadetail.html", {'detailpoja':prod,'slot':slottime,'cart':count_cart,'pooja':count_puja,'cal':cal})
+        faq = Faq.objects.filter(pooja=prod)
+        return render(request, "pujadetail.html", {'detailpoja':prod,'slot':slottime,'cart':count_cart,'pooja':count_puja,'cal':cal, 'faq_items': faq})
     except User.DoesNotExist:
         poja = Pooja.objects.get(id=id)
         print(poja)
         slottime = PoojaSlot.objects.all()
-        return render(request, "pujadetail.html", {'detailpoja':poja,'slot':slottime})
+        faq = Faq.objects.filter(pooja=poja)
+        return render(request, "pujadetail.html", {'detailpoja':poja,'slot':slottime, 'faq_items': faq})
 
 # def AddPoojaSlot(request, id):
 #     try:

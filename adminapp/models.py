@@ -106,6 +106,13 @@ class Pooja(models.Model):
     
     def __str__(self):
         return self.name
+
+
+class Faq(models.Model):
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, null=True, blank=True)
+    pooja = models.ForeignKey(Pooja, on_delete=models.CASCADE, related_name="pooja_faq", null=True, blank=True)
+    question = models.CharField(max_length=200)
+    answer = models.TextField(null=True)
     
     
 class Order(models.Model):

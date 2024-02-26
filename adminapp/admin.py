@@ -4,6 +4,7 @@ from .models import *
 
 admin.site.register(CreatePandit)
 admin.site.register(Products)
+admin.site.register(Faq)
 admin.site.register(CategoryOfPooja)
 admin.site.register(Pooja)
 admin.site.register(Order)
