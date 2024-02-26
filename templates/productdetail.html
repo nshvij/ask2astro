@@ -42,6 +42,36 @@
 .question h2 {
     margin-right: 30px; /* Add some space to the right of the question */
 }
+
+.btn-group {
+    display: flex;
+    align-items: center; /* Vertically center the contents */
+}
+
+.carat-label {
+    text-transform: capitalize;
+    color: var(--dark-color1);
+    font-size: 18px;
+    margin-right: 10px; /* Adjust spacing between label and buttons */
+}
+
+.sku-buttons {
+    border: 1px solid rgba(243, 115, 53, 0.5); /* Add border */
+    border-radius: 5px; /* Add border radius */
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap to the next line */
+}
+
+/*.btn-sku {*/
+/*    !*margin-right: 5px; !* Adjust spacing between buttons *!*!*/
+/*}*/
+
+.btn-sku.active {
+    background-color: rgb(243, 115, 53); /* Color for active SKU button */
+    /*background-image: linear-gradient(to right, rgb(243, 115, 53), rgb(255, 157, 92)); !* Gradient colors for active SKU button *!*/
+    color: #fff; !important;/* Text color for active SKU button */
+}
+
 </style>
 
 <section class="as_breadcrum_wrapper">
@@ -114,6 +144,20 @@
                     <!--	<button class="qtyplus" aria-hidden="true" style="border-style:none">&plus;</button>-->
                     <!--</p>-->
 
+                        {% if sku %}
+                            <div class="as_padderBottom40 btn-group" bis_skin_checked="1">
+                                <span class="carat-label">Select Carat:</span>
+                                <div class="sku-buttons">
+                                    {% for sku_item in sku %}
+                                        {% if sku_item == detailprod %}
+                                            <a href="{% url 'proddetail' id=sku_item.id %}" class="btn btn-sku active" data-position="top" data-delay="50" data-tooltip="{{ sku_item.sku_type }}">{{ sku_item.sku_type }}</a>
+                                        {% else %}
+                                            <a href="{% url 'proddetail' id=sku_item.id %}" class="btn btn-sku" data-position="top" data-delay="50" data-tooltip="{{ sku_item.sku_type }}">{{ sku_item.sku_type }}</a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
                         {% if prodquan > 0 %}
                         <p class="qty">
                             <label for="qty">Quantity:</label>

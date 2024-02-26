@@ -46,6 +46,15 @@ def filepath2(request, filename):
     filename = "%s%s" % (timeNow, old_filename)
     return os.path.join('productimg/', filename)
     
+
+class SKU(models.Model):
+    category = models.ForeignKey(CategoryOfProduct, on_delete=models.CASCADE)
+    sku_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.sku_name
+
+
 class Products(models.Model):
     prodname = models.CharField(max_length=200, null=True)
     prodpicture = models.ImageField(upload_to=filepath2, blank=True, null=True)
@@ -56,7 +65,9 @@ class Products(models.Model):
     offers = models.CharField(max_length=200, default=0)
     offerprice = models.CharField(max_length=200, default=0)
     active_status = models.BooleanField(default=True)
-    
+    sku = models.ForeignKey(SKU, on_delete=models.CASCADE, null=True, blank=True)
+    sku_type = models.CharField(max_length=200, null=True, blank=True)
+
     def __str__(self):
         return self.prodname
         

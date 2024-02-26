@@ -689,7 +689,10 @@ def ViewProductDetail(request,id):
         ob = Products.objects.filter(id=id)
         ob.update(offerprice=cal)
         faq = Faq.objects.filter(product=prod)
-        return render(request, "productdetail.html", {'detailprod':prod,'cart':count_cart,'pooja':count_puja,'cal':cal, 'prodquan':prodquan, 'faq_items': faq})
+        sku = None
+        if prod.sku:
+            sku = Products.objects.filter(sku=prod.sku)
+        return render(request, "productdetail.html", {'detailprod':prod,'cart':count_cart,'pooja':count_puja,'cal':cal, 'prodquan':prodquan, 'faq_items': faq, 'sku': sku})
     except User.DoesNotExist:
         prod = Products.objects.get(id=id)
         print(prod)
