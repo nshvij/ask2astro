@@ -165,10 +165,12 @@
                             <input type="number"  id="qty" name="quan" min="1" max="{{ detailprod.quantity }}" step="1" value="1"  style="border-style:none">
                             <button class="qtyplus" aria-hidden="true"  style="border-style:none">&plus;</button>
                         </p>
-                        <input type="submit" class="as_btn" value="Add To Cart">
-                         <a class="ml-5">
-                            <button type="button" id="buyNowBtn" class="as_btn">Buy Now</button>
-                         </a>
+                        <div class="d-flex justify-content-start align-items-center">
+                            <input type="submit" class="as_btn mr-2" value="Add To Cart">
+                            <a class="buy_now_btn">
+                                <button type="button" id="buyNowBtn" class="as_btn">Buy Now</button>
+                            </a>
+                        </div>
                         {% elif prodquan <= 0 %}
                             <del><span value="" class="as_btn" style="text-align:center">OUT OF STOCK</span></del>
                         {% endif %}
