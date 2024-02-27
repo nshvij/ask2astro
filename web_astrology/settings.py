@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+from phonepe.sdk.pg.payments.v1.payment_client import PhonePePaymentClient
 from phonepe.sdk.pg.env import Env
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -155,3 +156,5 @@ salt_key = "099eb0cd-02cf-4e2a-8aca-3e6c6aff0399"
 salt_index = 1
 env = Env.UAT # Change to Env.PROD when you go live
 redirect_base_url = "http://127.0.0.1:8000"
+
+phonepe_client = PhonePePaymentClient(merchant_id=merchant_id, salt_key=salt_key, salt_index=salt_index, env=env)

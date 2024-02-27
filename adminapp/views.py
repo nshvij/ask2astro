@@ -1280,8 +1280,6 @@ def PaymentByRazorpay(request):
     ##################################################################################################
     # PHONEPE CODE
     ##################################################################################################
-    phonepe_client = PhonePePaymentClient(merchant_id=settings.merchant_id, salt_key=settings.salt_key,
-                                          salt_index=settings.salt_index, env=settings.env)
     unique_transaction_id = str(uuid.uuid4())
     ui_redirect_url = settings.redirect_base_url + reverse("wallet")
     s2s_callback_url = settings.redirect_base_url + reverse("wallet")
@@ -1292,7 +1290,7 @@ def PaymentByRazorpay(request):
                                                                  merchant_user_id=id_assigned_to_user_by_merchant,
                                                                  callback_url=s2s_callback_url,
                                                                  redirect_url=ui_redirect_url)
-    pay_page_response = phonepe_client.pay(pay_page_request)
+    pay_page_response = settings.phonepe_client.pay(pay_page_request)
     print("pay_page_response ::: ", pay_page_request)
     pay_page_url = pay_page_response.data.instrument_response.redirect_info.url
 
@@ -1476,8 +1474,6 @@ def CheckoutforPuja(request):
     ##################################################################################################
     # PHONEPE CODE
     ##################################################################################################
-    phonepe_client = PhonePePaymentClient(merchant_id=settings.merchant_id, salt_key=settings.salt_key,
-                                          salt_index=settings.salt_index, env=settings.env)
     unique_transaction_id = str(uuid.uuid4())
     ui_redirect_url = settings.redirect_base_url + reverse("pujaslot_booking")
     s2s_callback_url = settings.redirect_base_url + reverse("pujaslot_booking")
@@ -1488,7 +1484,7 @@ def CheckoutforPuja(request):
                                                             merchant_user_id=id_assigned_to_user_by_merchant,
                                                             callback_url=s2s_callback_url,
                                                             redirect_url=ui_redirect_url)
-    pay_puja_response = phonepe_client.pay(pay_request)
+    pay_puja_response = settings.phonepe_client.pay(pay_request)
     pay_page_url = pay_puja_response.data.instrument_response.redirect_info.url
 
     prodid = pi
@@ -1662,8 +1658,6 @@ def CheckoutforQA(request):
     ##################################################################################################
     # PHONEPE CODE
     ##################################################################################################
-    phonepe_client = PhonePePaymentClient(merchant_id=settings.merchant_id, salt_key=settings.salt_key,
-                                          salt_index=settings.salt_index, env=settings.env)
     unique_transaction_id = str(uuid.uuid4())
     ui_redirect_url = settings.redirect_base_url + reverse("pujaslot_booking")
     s2s_callback_url = settings.redirect_base_url + reverse("pujaslot_booking")
@@ -1674,7 +1668,7 @@ def CheckoutforQA(request):
                                                             merchant_user_id=id_assigned_to_user_by_merchant,
                                                             callback_url=s2s_callback_url,
                                                             redirect_url=ui_redirect_url)
-    pay_pujaqa_response = phonepe_client.pay(pay_request)
+    pay_pujaqa_response = settings.phonepe_client.pay(pay_request)
     pay_page_url = pay_pujaqa_response.data.instrument_response.redirect_info.url
     
     current_user = User.objects.get(username=request.user)
