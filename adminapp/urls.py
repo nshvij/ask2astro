@@ -31,9 +31,13 @@ urlpatterns = [
     path('getproducts/',views.GetAllProducts),
     path('editproducts/<int:id>/', views.UpdateProducts, name="update_pati"),
     path('delete_products/<int:id>/', views.DeleteProducts, name='del_pati'),
-    path('viewproddetail/<int:id>/', views.ProductDetail, name='view_proddetail'),
+    path('viewproddetail/<int:id>/', views.FaqDetail, name='view_faq_detail'),
     
-    
+    path('getfaq/',views.GetAllFAQs),
+    path('addfaqs/',views.CreateFAQs),
+    path('edit-faqs/<int:id>/', views.UpdateFAQs, name="update_faq_question"),
+    path('delete_faqs/<int:id>/', views.DeleteFAQs, name='del_faq_question'),
+    path('view-faq-detail/<int:id>/', views.ProductDetail, name='view_proddetail'),
     
     path('addpuja/',views.CreatePooja),
     path('getpuja/',views.GetAllPuja),

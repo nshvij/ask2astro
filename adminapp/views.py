@@ -428,6 +428,84 @@ def DeleteHoroscopeCategory(request, id):
     return redirect('/admin-panel/gethoroscopcate/')
 
 
+def GetAllFAQs(request):
+    if 'q' in request.GET:
+        q = request.GET['q']
+        multiple_q = Q(Q(question__contains=q) | Q(answer__contains=q))
+        data = Faq.objects.filter(multiple_q)
+        context2 = {'data': data}
+        return render(request, "admintemp/searchfaqlist.html", context2)
+    prod = Faq.objects.all().order_by('-id')
+
+    paginator = Paginator(prod, 6)
+    page_number = request.GET.get('page')
+    all_lead = paginator.get_page(page_number)
+    totalpage = all_lead.paginator.num_pages
+
+    context = {
+        'all_lead': all_lead,
+        'lastpage': totalpage,
+        'totalPagelist': [n + 1 for n in range(totalpage)],
+        'product': prod
+    }
+    return render(request, "admintemp/getfaqlist.html", context)
+
+
+def CreateFAQs(request):
+    prod = Products.objects.all()
+    pooja = Pooja.objects.all()
+    if request.method == 'POST':
+        prodid = request.POST.get('product', None)
+        poojaid = request.POST.get('pooja', None)
+        question = request.POST.get('question', None)
+        answer = request.POST.get('answer', None)
+        if prodid:
+            product_data = Products.objects.filter(id=int(prodid)).first()
+            faq = Faq(product=product_data, question=question, answer=answer)
+            faq.save()
+        elif poojaid:
+            pooja_data = Pooja.objects.filter(id=int(poojaid)).first()
+            faq = Faq(pooja=pooja_data, question=question, answer=answer)
+            faq.save()
+
+        return redirect('/admin-panel/getfaq/')
+    else:
+        return render(request, "admintemp/addfaqslist.html", {'prod': prod, 'pooja': pooja})
+
+
+def UpdateFAQs(request, id):
+    prod = Products.objects.all()
+    pooja = Pooja.objects.all()
+    faq = Faq.objects.get(id=id)
+    if request.method == 'POST':
+        prodid = request.POST.get('product', None)
+        poojaid = request.POST.get('pooja', None)
+        question = request.POST.get('question', None)
+        answer = request.POST.get('answer', None)
+
+        faq_details = Faq.objects.filter(id=id)
+        if prodid:
+            product_data = Products.objects.filter(id=int(prodid)).first()
+            faq_details.update(product=product_data, question=question, answer=answer)
+        elif poojaid:
+            pooja_data = Pooja.objects.filter(id=int(poojaid)).first()
+            faq_details.update(pooja=pooja_data, question=question, answer=answer)
+
+        return redirect('/admin-panel/getfaq/')
+    else:
+        return render(request, "admintemp/editfaqlist.html",{'faq': faq, 'prod': prod, 'pooja': pooja})
+
+
+def DeleteFAQs(request, id):
+    data = Faq.objects.get(id=id)
+    data.delete()
+    return redirect('/admin-panel/getfaq/')
+
+
+def FaqDetail(request, id):
+    showdata =  Faq.objects.get(id=id)
+    return render(request, "admintemp/faqdetailpage.html", {'shoowdata':showdata})
+
 
 def CreateProducts(request):   
     
