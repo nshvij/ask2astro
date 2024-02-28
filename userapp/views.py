@@ -2118,8 +2118,6 @@ def PaymentByRazorpay(request):
 def PayWithWallet(request):
     direct_checkout = request.GET.get('direct_checkout', None)
     current_user = User.objects.get(username=request.user)
-    count_cart = Cart.objects.filter(user_id=current_user.id).count()
-    count_puja = PujaSlotBooking.objects.filter(user_id=current_user.id).count()
     user = User.objects.get(id=request.user.id)
     print(user)
     prod23 = WalletAmt.objects.filter(userid=user)
@@ -2185,6 +2183,7 @@ def PayWithWallet(request):
             print(tot)
 
             mylist = zip(prod, ls)
+        prod.delete()
     
 
     prodid = pi
@@ -2211,6 +2210,8 @@ def PayWithWallet(request):
     uplead.update(walletid=amtminus)
     # py12=PayByWalletAmount.objects.get(id=request.user.id)
     # print('edhfcewkfjehn',py12.walletid)
+    count_cart = Cart.objects.filter(user_id=current_user.id).count()
+    count_puja = PujaSlotBooking.objects.filter(user_id=current_user.id).count()
     
     return render(request, "paywithwallet.html", {'ggg':cb,'cartprod':prod, 'll':ll, 'totalamt':tot, 'amtt':amtminus,'cart':count_cart,'pooja':count_puja})
     
@@ -2329,7 +2330,8 @@ def CheckoutforPuja(request):
 
     current_user = User.objects.get(username=request.user)
     count_cart = Cart.objects.filter(user_id=current_user.id).count()
-    return render(request, "checkoutforpuja.html", {'cb':float(cb),'tot':float(tot),'cartprod':prod, 'item':count_cart, 'totalamt':tot, 'payment_url':pay_page_url, 'mylist':mylist,'tot':tot, 'ggg':cb})
+    count_puja = PujaSlotBooking.objects.filter(user_id=request.user.id).count()
+    return render(request, "checkoutforpuja.html", {'cb':float(cb),'tot':float(tot),'cartprod':prod, 'item':count_cart, 'totalamt':tot, 'payment_url':pay_page_url, 'mylist':mylist,'tot':tot, 'ggg':cb, 'cart':count_cart, 'pooja':count_puja})
     # return render(request, "checkout.html")
 
                 # return render(request, "checkout.html")
@@ -2400,8 +2402,11 @@ def PayWithWalletforPuja(request):
     uplead.update(walletid=amtminus)
     # py12=PayByWalletAmount.objects.get(id=request.user.id)
     # print('edhfcewkfjehn',py12.walletid)
+    prod.delete()
+    count_cart = Cart.objects.filter(user_id=request.user.id).count()
+    count_puja = PujaSlotBooking.objects.filter(user_id=request.user.id).count()
     
-    return render(request, "paywithwalletforpuja.html", {'ggg':cb,'cartprod':prod, 'll':ll, 'totalamt':tot, 'amtt':amtminus})
+    return render(request, "paywithwalletforpuja.html", {'ggg':cb,'cartprod':prod, 'll':ll, 'totalamt':tot, 'amtt':amtminus,'cart':count_cart,'pooja':count_puja})
     
     # return render(request, "checkout.html")
 
