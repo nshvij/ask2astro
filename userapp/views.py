@@ -147,6 +147,14 @@ def OrderSuccessView(request):
         amount = int(amount)
         phone_pay_order_id = transaction_id
 
+        # Deduct the quantity from inventory
+        products_in_cart = Cart.objects.filter(user_id=user)
+        for product in products_in_cart:
+            prod_inventory = Products.objects.filter(id=product.product.id).first()
+            prodquantity = int(prod_inventory.quantity) - int(product.quantity)
+            prod_inventory.quantity = prodquantity
+            prod_inventory.save()
+
         orderobj = Order(productid=prodid, userid_id=user, orderdate=date, order_price=amount,
                          razor_pay_order_id=phone_pay_order_id, order_status=False, address=request.user.currentaddress,
                          quantity=qt)
@@ -164,6 +172,7 @@ def BuyOrderSuccessView(request):
     transaction_id = request.GET.get('transaction_id')
     amount = request.GET.get('amount')
     product_name = request.GET.get('prod_name')
+    item_quantity = request.GET.get('quantity')
     response = payment_return(transaction_id)
     res = response.json()
     if res['data']['state'] == 'COMPLETED' and transaction_id == res['data']['merchantTransactionId']:
@@ -171,11 +180,15 @@ def BuyOrderSuccessView(request):
         productname = bytes.fromhex(product_name).decode()
         prod = Products.objects.filter(prodname=productname)
         pi = []
-        qt = 0
+        qt = int(item_quantity)
         for i in prod:
             i = pi.append(i.prodname)
-        for i in prod:
-            qt += int(i.quantity)
+
+        # Deduct the quantity from inventory
+        prod_inventory = prod.first()
+        prodquantity = int(prod_inventory.quantity) - int(qt)
+        prod_inventory.quantity = prodquantity
+        prod_inventory.save()
 
         prodid = pi
         date = datetime.now()
@@ -879,12 +892,9 @@ def ViewPujaSlotBooking(request):
     	# pujaslot = models.ForeignKey(PoojaSlot, on_delete=models.CASCADE)
         print('count_cart',count_cart[0].pujaslot)
         # return render(request, "showpujaslot.html", {'cartprod':prod, 'item':count_cart, 'totzalamt':c, 'payment':payment})
-        
-        
-            
         return render(request, "showpujaslot.html", {'cartprod':prod, 'slot':count_cart[0].pujaslot,'slot1':count_cart[0].dateofpuja,'totalamt':c, 'totalamt1':g, 'payment_url':pay_page_url,'cart':countcart,'pooja':count_puja})
     except:
-        return render(request, 'showpujaslot.html')
+        return render(request, 'showpujaslot.html', {'cart':countcart,'pooja':count_puja})
         
         
         
@@ -941,10 +951,11 @@ def AddToCart(request, id):
             print('qty',qty)
             c = Cart(user=user, product=obj,quantity=qty)
             c.save()
-            prodquantity=int(obj.quantity)-int(qty)
-            print(prodquantity)
-            obj1 = Products.objects.filter(id=id)
-            obj1.update(quantity=prodquantity)
+            # Shifted to Payment checkout section, After payment is completed the inventory quantity will deduct
+            # prodquantity=int(obj.quantity)-int(qty)
+            # print(prodquantity)
+            # obj1 = Products.objects.filter(id=id)
+            # obj1.update(quantity=prodquantity)
             # messages.success(request, "Cart create successfully...  ")
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'),{'cart':countcart,'pooja':count_puja})
         else:
@@ -1164,10 +1175,11 @@ def OrderPlaceAddres(request):
         if item_name and prod:
             caloffer = (float(prod.price) * float(prod.offers)) / 100
             cal = float(prod.price) - caloffer
-            prodquantity = int(prod.quantity) - int(item_quantity)
-            prod.quantity = prodquantity
-            prod.save()
-            context = {"id":prod.id, "prodname": prod.prodname, 'price': cal*int(item_quantity)}
+            # Shifted to Payment checkout section, After payment is completed the inventory quantity will deduct
+            # prodquantity = int(prod.quantity) - int(item_quantity)
+            # prod.quantity = prodquantity
+            # prod.save()
+            context = {"id":prod.id, "prodname": prod.prodname, 'price': cal*int(item_quantity), 'quantity': item_quantity}
             request.session['context'] = context
             return redirect('/product/checkout/')
         return redirect('/cart/checkout/')
@@ -1191,6 +1203,7 @@ def BuyNow(request):
     prod_id = context['id'] or None
     prod_name = context['prodname'] or None
     prod_price = context['price'] or None
+    item_quantity = context['quantity'] or None
     prod = Products.objects.filter(id=int(prod_id)).first()
     if not prod:
         messages.error(request, 'Item not Found.')
@@ -1227,8 +1240,8 @@ def BuyNow(request):
     ##################################################################################################
     unique_transaction_id = str(uuid.uuid4())
     decoded_prod_name = unquote(prod_name).encode().hex()
-    redirect_url = settings.redirect_base_url + reverse("buy_now_success") + f'?transaction_id={unique_transaction_id}&prod_name={decoded_prod_name}&amount={int(prod_price)}'
-    callback_url = settings.redirect_base_url + reverse("buy_now_success") + f'?transaction_id={unique_transaction_id}&prod_name={decoded_prod_name}&amount={int(prod_price)}'
+    redirect_url = settings.redirect_base_url + reverse("buy_now_success") + f'?transaction_id={unique_transaction_id}&prod_name={decoded_prod_name}&amount={int(prod_price)}&quantity={item_quantity}'
+    callback_url = settings.redirect_base_url + reverse("buy_now_success") + f'?transaction_id={unique_transaction_id}&prod_name={decoded_prod_name}&amount={int(prod_price)}&quantity={item_quantity}'
     amount = int(prod_price) * 100
     id_assigned_to_user_by_merchant = user.id
     pay_request = PgPayRequest.pay_page_pay_request_builder(merchant_transaction_id=unique_transaction_id,
