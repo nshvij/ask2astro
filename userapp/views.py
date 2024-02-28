@@ -2523,7 +2523,7 @@ def PayWithWalletforQA(request):
     print('This is test **** this is data ****',prod)
     
     a=prod[0].qus
-    b=prod[0].answertime.price
+    b=request.GET.get('amount')
     c=prod[0].id
     # pi = []
     # idd=[]
