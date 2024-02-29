@@ -2315,19 +2315,6 @@ def CheckoutforPuja(request):
     pay_puja_response = settings.phonepe_client.pay(pay_request)
     pay_page_url = pay_puja_response.data.instrument_response.redirect_info.url
 
-    pujadate = pd
-    prodid = pi
-    usr = request.user.id
-    date = datetime.now()
-    # quantity= request.POST['qty']
-    amount = pay_request.amount / 100
-    phone_pay_order_id = pay_puja_response.data.merchant_transaction_id
-
-    orderobj = PoojaOrder(pujaid=prodid, userid_id=usr, orderdate=date, order_price=amount, bookeddate=pujadate,
-                          razor_pay_order_id=phone_pay_order_id, order_status=False,
-                          address=request.user.currentaddress)
-    orderobj.save()
-
     current_user = User.objects.get(username=request.user)
     count_cart = Cart.objects.filter(user_id=current_user.id).count()
     count_puja = PujaSlotBooking.objects.filter(user_id=request.user.id).count()
