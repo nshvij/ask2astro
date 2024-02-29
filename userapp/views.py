@@ -2340,10 +2340,12 @@ def PayWithWalletforPuja(request):
     # print("dsfsfsfsd",addr)
     prod = PujaSlotBooking.objects.filter(user_id=user.id).order_by('id').reverse()
     print(prod)
-    pi = []
+    pi, pd = [], []
     for i in prod:
         i= pi.append(i.pooja.name)
-    print("My Product", pi) 
+    print("My Product", pi)
+    for i in prod:
+        pd.append(i.dateofpuja)
     c = 0
     for i in prod:
         c = c + float(i.pooja.offerprice)
@@ -2372,7 +2374,7 @@ def PayWithWalletforPuja(request):
     amount = tot
     razor_pay_order_id = 'Wallet'
     
-    orderobj = PoojaOrder(pujaid=prodid,userid_id=usr,orderdate=date,order_price=amount,razor_pay_order_id=razor_pay_order_id,order_status=False,address=request.user.currentaddress)
+    orderobj = PoojaOrder(pujaid=prodid,userid_id=usr,orderdate=date, bookeddate=pd, order_price=amount,razor_pay_order_id=razor_pay_order_id,order_status=False,address=request.user.currentaddress)
     orderobj.save()
     # # messages.success(request, "Order created....")
     
